@@ -13,14 +13,14 @@ import java.util.Date;
 import static com.growplan.common.code.ExceptionCode.*;
 
 @Service
-public class TokenProvider {
+public class JwtProvider {
 
     public static final String EMPTY_SUBJECT = "";
     private final Key secretKey;
     private final Long accessExpirationTime;
     private final Long refreshExpirationTime;
 
-    public TokenProvider(
+    public JwtProvider(
             @Value("${jwt.secret-key}") final String secretKey,
             @Value("${jwt.access-expiration-time}") final Long accessExpirationTime,
             @Value("${jwt.refresh-expiration-time}") final Long refreshExpirationTime

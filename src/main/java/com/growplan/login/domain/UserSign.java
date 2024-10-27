@@ -1,5 +1,6 @@
-package com.growplan.user.domain;
+package com.growplan.login.domain;
 
+import com.growplan.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

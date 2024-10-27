@@ -3,6 +3,7 @@ package com.growplan.user.domain;
 import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
 import com.growplan.common.type.StatusType;
+import com.growplan.login.domain.UserSign;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -9,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import static com.growplan.common.code.ExceptionCode.INVALID_ACCESS_TOKEN;
 
 @Component
-public class TokenExtractor {
+public class JwtExtractor {
 
     private final static String AUTHORIZATION_HEADER = "Authorization";
     private final static String REFRESH_TOKEN_HEADER = "RefreshToken";
