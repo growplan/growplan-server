@@ -19,6 +19,7 @@ public enum ExceptionCode {
     NOT_FOUND_USER(2008, "존재하지 않는 회원입니다."),
 
     INVALID_GENDER_TYPE(3000, "유효하지 않은 성별 타입니다."),
+    NOT_FOUND_USER_CHILD(3001, "요청에 해당하는 아이를 찾을 수 없습니다."),
 
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 

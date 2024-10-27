@@ -4,6 +4,7 @@ import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.child.domain.type.GenderType;
 import com.growplan.child.dto.request.ChildRequest;
+import com.growplan.child.dto.response.ChildResponse;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER;
+import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
 
 @Service
 @Transactional
@@ -20,6 +22,14 @@ public class ChildService {
 
     private final UserRepository userRepository;
     private final ChildRepository childRepository;
+
+    public ChildResponse getChild(final Long userId, final Long childId) {
+        // TODO 쿼리 수정하기
+        final UserChild userChild = childRepository.findById(childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        return ChildResponse.of(userChild);
+    }
 
     public void saveChild(final Long userId, final ChildRequest childRequest) {
         final User user = userRepository.findById(userId)

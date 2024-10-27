@@ -1,5 +1,7 @@
 package com.growplan.user.controller;
 
+import com.growplan.child.dto.request.ChildRequest;
+import com.growplan.child.service.ChildService;
 import com.growplan.login.domain.Accessor;
 import com.growplan.login.domain.Auth;
 import com.growplan.login.dto.request.SignUpRequest;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final ChildService childService;
 
     @GetMapping
     public ResponseEntity<UserListResponse> getUsers() {
@@ -33,7 +36,7 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> getFixedQuests(@Auth final Accessor accessor) {
+    public ResponseEntity<Void> deleteAccount(@Auth final Accessor accessor) {
         userService.deleteAccount(accessor.getUserId());
         return ResponseEntity.noContent().build();
     }
@@ -50,6 +53,24 @@ public class UserController {
             @RequestBody @Valid final UserUpdateRequest userUpdateRequest
     ) {
         userService.updateUser(accessor.getUserId(), userUpdateRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/children")
+    public ResponseEntity<Void> saveChild(
+            @Auth final Accessor accessor,
+            @RequestBody @Valid final ChildRequest childRequest
+    ) {
+        childService.saveChild(accessor.getUserId(), childRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/children/{childId}")
+    public ResponseEntity<Void> getChild(
+            @Auth final Accessor accessor,
+            @PathVariable("childId") final Long childId
+    ) {
+        childService.getChild(accessor.getUserId(), childId);
         return ResponseEntity.noContent().build();
     }
 }
