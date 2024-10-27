@@ -18,6 +18,8 @@ public enum ExceptionCode {
     INCORRECT_PASSWORD(2007, "비밀번호가 일치하지 않습니다."),
     NOT_FOUND_USER(2008, "존재하지 않는 회원입니다."),
 
+    INVALID_GENDER_TYPE(3000, "유효하지 않은 성별 타입니다."),
+
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;

@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -44,12 +45,28 @@ public class UserChild extends BaseEntity {
     private Double bornWeight;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "userChild", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ChildRecord> childRecords;
+    private List<ChildRecord> childRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "userChild", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ChildSurvey> childSurveys;
+    private List<ChildSurvey> childSurveys = new ArrayList<>();
+
+    public UserChild(
+            final String name,
+            final String birthdate,
+            final GenderType gender,
+            final Double bornHeight,
+            final Double bornWeight,
+            final User user
+    ) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.bornHeight = bornHeight;
+        this.bornWeight = bornWeight;
+        this.user = user;
+    }
 }
