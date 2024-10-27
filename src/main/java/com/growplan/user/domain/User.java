@@ -15,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.growplan.common.type.StatusType.ACTIVE;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -53,4 +54,30 @@ public class User extends BaseEntity {
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private UserSign userSign;
+
+    public User(
+            final String name,
+            final String birthdate,
+            final String email,
+            final String number
+    ) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.number = number;
+        this.isValid = ACTIVE;
+    }
+
+    public void updateUser(
+            final String name,
+            final String birthdate,
+            final String email,
+            final String number
+    ) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.email = email;
+        this.number = number;
+        this.isValid = ACTIVE;
+    }
 }

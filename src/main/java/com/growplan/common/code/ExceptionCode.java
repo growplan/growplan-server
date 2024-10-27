@@ -16,6 +16,7 @@ public enum ExceptionCode {
     INVALIDATE_TOKEN(2005, "유효하지 않은 토큰입니다."),
     NOT_FOUND_USERNAME(2006, "존재하지 않는 아이디입니다."),
     INCORRECT_PASSWORD(2007, "비밀번호가 일치하지 않습니다."),
+    NOT_FOUND_USER(2008, "존재하지 않는 회원입니다."),
 
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 

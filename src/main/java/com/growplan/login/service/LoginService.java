@@ -7,10 +7,13 @@ import com.growplan.login.domain.UserSign;
 import com.growplan.login.domain.repository.RefreshTokenRepository;
 import com.growplan.login.domain.repository.UserSignRepository;
 import com.growplan.login.dto.request.LoginRequest;
+import com.growplan.login.dto.request.SignUpRequest;
 import com.growplan.login.dto.response.LoginResponse;
 import com.growplan.login.dto.response.LoginStatusResponse;
 import com.growplan.login.jwt.JwtExtractor;
 import com.growplan.login.jwt.JwtProvider;
+import com.growplan.user.domain.User;
+import com.growplan.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,7 @@ import static com.growplan.common.code.ExceptionCode.*;
 public class LoginService {
 
     private final UserSignRepository userSignRepository;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtProvider jwtProvider;
     private final JwtExtractor jwtExtractor;
@@ -58,5 +62,30 @@ public class LoginService {
         final String refreshToken = jwtProvider.generateRefreshToken();
 
         return LoginResponse.of(accessToken, refreshToken);
+    }
+
+    public LoginResponse signUp(final SignUpRequest signUpRequest) {
+        final User user = new User(
+                signUpRequest.getName(),
+                signUpRequest.getBirthdate(),
+                signUpRequest.getEmail(),
+                signUpRequest.getNumber()
+        );
+
+        final User savedUser = userRepository.save(user);
+
+        final String accessToken = jwtProvider.generateAccessToken(savedUser.getId().toString());
+
+        final RefreshToken refreshToken = new RefreshToken(jwtProvider.generateRefreshToken(), savedUser.getId());
+        refreshTokenRepository.save(refreshToken);
+
+        return LoginResponse.of(accessToken, refreshToken.getToken());
+    }
+
+    public void deleteAccount(final Long userId) {
+        final String refreshToken = jwtExtractor.getRefreshToken();
+
+        refreshTokenRepository.deleteById(refreshToken);
+        userRepository.deleteById(userId);
     }
 }
