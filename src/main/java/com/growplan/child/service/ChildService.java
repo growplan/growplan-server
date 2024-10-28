@@ -4,6 +4,7 @@ import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.child.domain.type.GenderType;
 import com.growplan.child.dto.request.ChildRequest;
+import com.growplan.child.dto.response.ChildListResponse;
 import com.growplan.child.dto.response.ChildResponse;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.user.domain.User;
@@ -11,6 +12,8 @@ import com.growplan.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER;
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
@@ -29,6 +32,13 @@ public class ChildService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         return ChildResponse.of(userChild);
+    }
+
+    public ChildListResponse getChildren(final Long userId) {
+        // TODO 쿼리 수정하기
+        final List<UserChild> userChildren = childRepository.findAll();
+
+        return ChildListResponse.of(userChildren);
     }
 
     public void saveChild(final Long userId, final ChildRequest childRequest) {
