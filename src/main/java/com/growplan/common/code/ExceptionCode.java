@@ -21,6 +21,8 @@ public enum ExceptionCode {
     INVALID_GENDER_TYPE(3000, "유효하지 않은 성별 타입니다."),
     NOT_FOUND_USER_CHILD(3001, "요청에 해당하는 아이를 찾을 수 없습니다."),
 
+    NOT_FOUND_CHILD_SURVEY(4001, "요청에 해당하는 설문을 찾을 수 없습니다."),
+
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;

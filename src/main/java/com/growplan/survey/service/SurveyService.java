@@ -3,8 +3,11 @@ package com.growplan.survey.service;
 import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.common.exception.BadRequestException;
+import com.growplan.survey.domain.ChildSurvey;
 import com.growplan.survey.domain.Survey;
+import com.growplan.survey.domain.repository.ChildSurveyRepository;
 import com.growplan.survey.domain.repository.SurveyRepository;
+import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static com.growplan.common.code.ExceptionCode.NOT_FOUND_CHILD_SURVEY;
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
 
 @Service
@@ -24,6 +28,7 @@ public class SurveyService {
 
     private final ChildRepository childRepository;
     private final SurveyRepository surveyRepository;
+    private final ChildSurveyRepository childSurveyRepository;
 
     @Transactional(readOnly = true)
     public SurveyListResponse getSurvey(final Long userId, final Long childId) {
@@ -36,6 +41,15 @@ public class SurveyService {
         final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(birthdate);
 
         return SurveyListResponse.of(surveys);
+    }
+
+    public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
+        final ChildSurvey childSurvey = childSurveyRepository.findById(surveyId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_CHILD_SURVEY));
+
+        childSurvey.updateChildSurvey(childSurveyUpdateRequest.getStatus());
+
+        childSurveyRepository.save(childSurvey);
     }
 
     private Double calculateAge(final String birthdateStr) {

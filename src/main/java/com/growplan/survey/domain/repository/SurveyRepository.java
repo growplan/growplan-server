@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface SurveyRepository extends JpaRepository<User, Long> {
+public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
     @Query("""
             SELECT s FROM Survey s
