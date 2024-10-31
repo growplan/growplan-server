@@ -4,19 +4,19 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @RequiredArgsConstructor
 public class DevelopmentResultListResponse {
 
-    private final Integer totalScore;
-    private final List<String> scripts;
+    private final List<DevelopmentResultResponse> developments;
 
-    // TODO 상태에 대한 설명을 어디서 가져올 것인지
-    public DevelopmentResultListResponse of(final Integer totalScore, final List<String> scripts) {
-        return new DevelopmentResultListResponse(
-                totalScore,
-                scripts
-        );
+    public static DevelopmentResultListResponse of(final Map<String, Integer> scoreMap) {
+        final List<DevelopmentResultResponse> responses = scoreMap.entrySet().stream()
+                .map(entry -> DevelopmentResultResponse.of(entry.getKey(), entry.getValue()))
+                .toList();
+
+        return new DevelopmentResultListResponse(responses);
     }
 }
