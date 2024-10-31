@@ -16,5 +16,5 @@ public interface RecordRepository extends JpaRepository<ChildRecord, Long> {
             LEFT JOIN FETCH cr.recordTags rt
             WHERE cr.userChild.user.id = :userId AND cr.userChild.id = :childId
             """)
-    List<ChildRecord> findByUserIdAndChildId(@Param("userId") final Long userId, @Param("childId") final Long childId);
+    List<ChildRecord> findRecordsByUserIdAndChildId(@Param("userId") final Long userId, @Param("childId") final Long childId);
 }
