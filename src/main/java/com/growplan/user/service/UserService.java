@@ -53,6 +53,8 @@ public class UserService {
 
         final User savedUser = userRepository.save(user);
 
+        // TODO save user sign
+
         final String accessToken = jwtProvider.generateAccessToken(savedUser.getId().toString());
 
         final RefreshToken refreshToken = new RefreshToken(jwtProvider.generateRefreshToken(), savedUser.getId());
@@ -64,6 +66,7 @@ public class UserService {
     public void deleteAccount(final Long userId) {
         final String refreshToken = jwtExtractor.getRefreshToken();
 
+        // TODO user DELETE로 변경
         refreshTokenRepository.deleteById(refreshToken);
         userRepository.deleteById(userId);
     }

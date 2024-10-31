@@ -27,16 +27,14 @@ public class ChildService {
     private final ChildRepository childRepository;
 
     public ChildResponse getChild(final Long userId, final Long childId) {
-        // TODO 쿼리 수정하기
-        final UserChild userChild = childRepository.findById(childId)
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         return ChildResponse.of(userChild);
     }
 
     public ChildListResponse getChildren(final Long userId) {
-        // TODO 쿼리 수정하기
-        final List<UserChild> userChildren = childRepository.findAll();
+        final List<UserChild> userChildren = childRepository.findByUserId(userId);
 
         return ChildListResponse.of(userChildren);
     }

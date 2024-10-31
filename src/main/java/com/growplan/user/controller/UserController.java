@@ -1,6 +1,8 @@
 package com.growplan.user.controller;
 
 import com.growplan.child.dto.request.ChildRequest;
+import com.growplan.child.dto.response.ChildListResponse;
+import com.growplan.child.dto.response.ChildResponse;
 import com.growplan.child.service.ChildService;
 import com.growplan.login.domain.Accessor;
 import com.growplan.login.domain.Auth;
@@ -56,6 +58,12 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{userId}/children")
+    public ResponseEntity<ChildListResponse> saveChild(@Auth final Accessor accessor) {
+        final ChildListResponse childListResponse = childService.getChildren(accessor.getUserId());
+        return ResponseEntity.ok().body(childListResponse);
+    }
+
     @PostMapping("/{userId}/children")
     public ResponseEntity<Void> saveChild(
             @Auth final Accessor accessor,
@@ -66,11 +74,11 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/children/{childId}")
-    public ResponseEntity<Void> getChild(
-            @Auth final Accessor accessor,
+    public ResponseEntity<ChildResponse> getChild(
+            @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        childService.getChild(accessor.getUserId(), childId);
+        childService.getChild(userId, childId);
         return ResponseEntity.noContent().build();
     }
 }
