@@ -1,14 +1,13 @@
 package com.growplan.record.controller;
 
+import com.growplan.record.dto.request.RecordRequest;
 import com.growplan.record.dto.response.RecordDetailResponse;
 import com.growplan.record.dto.response.RecordListResponse;
 import com.growplan.record.service.RecordService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,5 +33,15 @@ public class RecordController {
     ) {
         final RecordDetailResponse response = recordService.getRecord(userId, childId, recordId);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> getSurvey(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @RequestBody @Valid final RecordRequest recordRequest
+    ) {
+        recordService.saveRecord(userId, childId, recordRequest);
+        return ResponseEntity.noContent().build();
     }
 }

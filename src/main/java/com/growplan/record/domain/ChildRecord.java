@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -31,5 +32,10 @@ public class ChildRecord extends BaseEntity {
     private UserChild userChild;
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ChildRecordTag> recordTags;
+    private List<ChildRecordTag> recordTags = new ArrayList<>();
+
+    public ChildRecord(final String script, final UserChild userChild) {
+        this.script = script;
+        this.userChild = userChild;
+    }
 }
