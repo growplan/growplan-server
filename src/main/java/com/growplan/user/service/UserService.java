@@ -1,14 +1,12 @@
 package com.growplan.user.service;
 
 import com.growplan.common.exception.BadRequestException;
-import com.growplan.login.domain.RefreshToken;
-import com.growplan.login.domain.repository.RefreshTokenRepository;
+import com.growplan.login.domain.UserSign;
 import com.growplan.login.dto.request.SignUpRequest;
-import com.growplan.login.dto.response.LoginResponse;
-import com.growplan.login.jwt.JwtExtractor;
-import com.growplan.login.jwt.JwtProvider;
+import com.growplan.login.dto.response.SignUpResponse;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
+import com.growplan.user.domain.repository.UserSignRepository;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
@@ -25,10 +23,8 @@ import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER;
 @Transactional
 public class UserService {
 
-    private final JwtProvider jwtProvider;
-    private final JwtExtractor jwtExtractor;
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserSignRepository userSignRepository;
 
     public UserResponse getUser(final Long userId) {
         final User user = userRepository.findById(userId)
@@ -43,7 +39,7 @@ public class UserService {
         return UserListResponse.of(users);
     }
 
-    public LoginResponse signUp(final SignUpRequest signUpRequest) {
+    public SignUpResponse signUp(final SignUpRequest signUpRequest) {
         final User user = new User(
                 signUpRequest.getName(),
                 signUpRequest.getBirthdate(),
@@ -53,22 +49,15 @@ public class UserService {
 
         final User savedUser = userRepository.save(user);
 
-        // TODO save user sign
+        final UserSign userSign = new UserSign(
+                signUpRequest.getUsername(),
+                signUpRequest.getPassword(),
+                savedUser
+        );
 
-        final String accessToken = jwtProvider.generateAccessToken(savedUser.getId().toString());
+        userSignRepository.save(userSign);
 
-        final RefreshToken refreshToken = new RefreshToken(jwtProvider.generateRefreshToken(), savedUser.getId());
-        refreshTokenRepository.save(refreshToken);
-
-        return LoginResponse.of(accessToken, refreshToken.getToken());
-    }
-
-    public void deleteAccount(final Long userId) {
-        final String refreshToken = jwtExtractor.getRefreshToken();
-
-        // TODO user DELETE로 변경
-        refreshTokenRepository.deleteById(refreshToken);
-        userRepository.deleteById(userId);
+        return SignUpResponse.of(savedUser);
     }
 
     public void updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {
@@ -83,5 +72,10 @@ public class UserService {
         );
 
         userRepository.save(user);
+    }
+
+    public void deleteAccount(final Long userId) {
+        // TODO 연관 관계 찾아서 모두 삭제
+        userRepository.deleteById(userId);
     }
 }

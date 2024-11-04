@@ -1,13 +1,7 @@
 package com.growplan.user.controller;
 
-import com.growplan.child.dto.request.ChildRequest;
-import com.growplan.child.dto.response.ChildListResponse;
-import com.growplan.child.dto.response.ChildResponse;
-import com.growplan.child.service.ChildService;
-import com.growplan.login.domain.Accessor;
-import com.growplan.login.domain.Auth;
 import com.growplan.login.dto.request.SignUpRequest;
-import com.growplan.login.dto.response.LoginResponse;
+import com.growplan.login.dto.response.SignUpResponse;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
@@ -23,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final ChildService childService;
 
     @GetMapping
     public ResponseEntity<UserListResponse> getUsers() {
@@ -32,53 +25,29 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<LoginResponse> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
-        final LoginResponse loginResponse = userService.signUp(signUpRequest);
-        return ResponseEntity.ok().body(loginResponse);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteAccount(@Auth final Accessor accessor) {
-        userService.deleteAccount(accessor.getUserId());
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<SignUpResponse> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
+        final SignUpResponse signUpResponse = userService.signUp(signUpRequest);
+        return ResponseEntity.ok().body(signUpResponse);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getUser(@Auth final Accessor accessor) {
-        final UserResponse userResponse = userService.getUser(accessor.getUserId());
+    public ResponseEntity<UserResponse> getUser(@PathVariable("userId") final Long userId) {
+        final UserResponse userResponse = userService.getUser(userId);
         return ResponseEntity.ok().body(userResponse);
     }
 
     @PatchMapping("/{userId}")
     public ResponseEntity<Void> updateUser(
-            @Auth final Accessor accessor,
+            @PathVariable("userId") final Long userId,
             @RequestBody @Valid final UserUpdateRequest userUpdateRequest
     ) {
-        userService.updateUser(accessor.getUserId(), userUpdateRequest);
+        userService.updateUser(userId, userUpdateRequest);
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{userId}/children")
-    public ResponseEntity<ChildListResponse> saveChild(@Auth final Accessor accessor) {
-        final ChildListResponse childListResponse = childService.getChildren(accessor.getUserId());
-        return ResponseEntity.ok().body(childListResponse);
-    }
-
-    @PostMapping("/{userId}/children")
-    public ResponseEntity<Void> saveChild(
-            @Auth final Accessor accessor,
-            @RequestBody @Valid final ChildRequest childRequest
-    ) {
-        childService.saveChild(accessor.getUserId(), childRequest);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{userId}/children/{childId}")
-    public ResponseEntity<ChildResponse> getChild(
-            @PathVariable("userId") final Long userId,
-            @PathVariable("childId") final Long childId
-    ) {
-        childService.getChild(userId, childId);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable("userId") final Long userId) {
+        userService.deleteAccount(userId);
         return ResponseEntity.noContent().build();
     }
 }

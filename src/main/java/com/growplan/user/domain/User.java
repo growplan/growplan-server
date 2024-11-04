@@ -13,6 +13,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.growplan.common.type.StatusType.ACTIVE;
@@ -50,7 +51,7 @@ public class User extends BaseEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<UserChild> userChildren;
+    private List<UserChild> userChildren = new ArrayList<>();
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private UserSign userSign;
