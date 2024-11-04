@@ -7,6 +7,7 @@ import com.growplan.survey.domain.ChildSurvey;
 import com.growplan.survey.domain.Survey;
 import com.growplan.survey.domain.repository.ChildSurveyRepository;
 import com.growplan.survey.domain.repository.SurveyRepository;
+import com.growplan.survey.dto.request.ChildSurveyRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,16 +32,24 @@ public class SurveyService {
     private final ChildSurveyRepository childSurveyRepository;
 
     @Transactional(readOnly = true)
-    public SurveyListResponse getSurvey(final Long userId, final Long childId) {
-        // TODO 쿼리 수정하기
-        final UserChild userChild = childRepository.findById(childId)
+    public SurveyListResponse getChildSurvey(final Long userId, final Long childId) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
-        final Double birthdate = calculateAge(userChild.getBirthdate());
+        final Double validAge = calculateAge(userChild.getBirthdate());
 
-        final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(birthdate);
+        final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(validAge);
 
         return SurveyListResponse.of(surveys);
+    }
+
+    public void saveChildSurvey(final Long userId, final Long childId, final ChildSurveyRequest childSurveyRequest) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        final Double validAge = calculateAge(userChild.getBirthdate());
+
+        final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(validAge);
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {

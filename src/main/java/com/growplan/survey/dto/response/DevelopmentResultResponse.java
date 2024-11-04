@@ -8,12 +8,18 @@ import lombok.RequiredArgsConstructor;
 public class DevelopmentResultResponse {
 
     private final String developmentType;
-    private final Integer totalScore;
+    private final Integer score;
+    private final Boolean isRisk;
 
-    public static DevelopmentResultResponse of(final String developmentType, final Integer totalScore) {
+    public static DevelopmentResultResponse of(
+            final String developmentType,
+            final Integer score,
+            final Boolean isRisk
+    ) {
         return new DevelopmentResultResponse(
                 developmentType,
-                totalScore
+                score,
+                isRisk
         );
     }
 }

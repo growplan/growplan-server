@@ -29,7 +29,7 @@ public class DevelopService {
     private final ChildRepository childRepository;
     private final ChildSurveyRepository childSurveyRepository;
 
-    public DevelopmentResultListResponse getAllDevelopmentResults(final Long userId, final Long childId) {
+    public DevelopmentResultListResponse getDevelopmentResultsAndSurveys(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
@@ -51,6 +51,7 @@ public class DevelopService {
         final List<ChildSurvey> surveys = childSurveyRepository.findByValidAgeAndDevelopmentType(validAge, developmentType);
 
         final Integer developmentScore = calculateDevelopmentScore(surveys);
+
 
         return DevelopmentDetailResultResponse.of(surveys, developmentScore);
 

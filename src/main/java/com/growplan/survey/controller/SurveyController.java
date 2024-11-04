@@ -1,5 +1,6 @@
 package com.growplan.survey.controller;
 
+import com.growplan.survey.dto.request.ChildSurveyRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import com.growplan.survey.service.SurveyService;
@@ -16,12 +17,23 @@ public class SurveyController {
     private final SurveyService surveyService;
 
     @GetMapping
-    public ResponseEntity<SurveyListResponse> getSurveys(
+    public ResponseEntity<SurveyListResponse> getChildSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        final SurveyListResponse surveyListResponse = surveyService.getSurvey(userId, childId);
+        final SurveyListResponse surveyListResponse = surveyService.getChildSurvey(userId, childId);
         return ResponseEntity.ok().body(surveyListResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> saveChildSurveys(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @RequestBody @Valid final ChildSurveyRequest childSurveyRequest
+    ) {
+        // TOOD 수정 필요
+        surveyService.saveChildSurvey(userId, childId, childSurveyRequest);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{surveyId}")
