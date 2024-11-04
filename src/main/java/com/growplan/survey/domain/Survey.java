@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -30,4 +33,7 @@ public class Survey {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "survey_group_id", nullable = false)
     private SurveyGroup surveyGroup;
+
+    @OneToMany(mappedBy = "survey", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ChildSurvey> childSurveys = new ArrayList<>();
 }

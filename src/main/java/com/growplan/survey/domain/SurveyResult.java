@@ -1,9 +1,13 @@
 package com.growplan.survey.domain;
 
 import com.growplan.child.domain.UserChild;
+import com.growplan.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -12,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class SurveyResult {
+public class SurveyResult extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -31,4 +35,7 @@ public class SurveyResult {
 
     @Column(nullable = false)
     private Boolean isRisk;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 }

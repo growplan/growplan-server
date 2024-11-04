@@ -2,6 +2,7 @@ package com.growplan.survey.controller;
 
 import com.growplan.survey.dto.request.ChildSurveyRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
+import com.growplan.survey.dto.response.SurveyDetailListResponse;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import com.growplan.survey.service.SurveyService;
 import jakarta.validation.Valid;
@@ -21,8 +22,18 @@ public class SurveyController {
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        final SurveyListResponse surveyListResponse = surveyService.getChildSurvey(userId, childId);
+        final SurveyListResponse surveyListResponse = surveyService.getChildSurveys(userId, childId);
         return ResponseEntity.ok().body(surveyListResponse);
+    }
+
+    @GetMapping("/{developmentType}")
+    public ResponseEntity<SurveyDetailListResponse> getSurveyDetail(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @PathVariable("developmentType") final String developmentType
+    ) {
+        final SurveyDetailListResponse response = surveyService.getSurveyDetail(userId, childId, developmentType);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
@@ -43,7 +54,7 @@ public class SurveyController {
             @PathVariable("surveyId") final Long surveyId,
             @RequestBody @Valid final ChildSurveyUpdateRequest childSurveyUpdateRequest
 
-            ) {
+    ) {
         surveyService.updateChildSurvey(userId, childId, surveyId, childSurveyUpdateRequest);
         return ResponseEntity.noContent().build();
     }

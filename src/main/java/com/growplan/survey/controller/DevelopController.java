@@ -18,11 +18,11 @@ public class DevelopController {
     private final DevelopService developService;
 
     @GetMapping
-    public ResponseEntity<DevelopmentScaleSurveyResponse> getAllDevelopmentResults(
+    public ResponseEntity<DevelopmentScaleSurveyResponse> getDevelopmentScaleAndSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        final DevelopmentScaleSurveyResponse response = developService.getDevelopmentResultsAndSurveys(userId, childId);
+        final DevelopmentScaleSurveyResponse response = developService.getDevelopmentScalesAndSurveys(userId, childId);
         return ResponseEntity.ok().body(response);
     }
 
