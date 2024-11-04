@@ -37,4 +37,8 @@ public class ChildSurvey extends BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public void updateChildSurvey(final Integer status) {
+        this.status = status;
+    }
 }

@@ -25,4 +25,9 @@ public class ChildRecordTag {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "development_type_id", nullable = false)
     private DevelopmentType developmentType;
+
+    public ChildRecordTag(final ChildRecord childRecord, final DevelopmentType developmentType) {
+        this.childRecord = childRecord;
+        this.developmentType = developmentType;
+    }
 }

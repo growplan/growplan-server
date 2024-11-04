@@ -26,4 +26,10 @@ public class UserSign {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public UserSign(final String username, final String password, final User user) {
+        this.username = username;
+        this.password = password;
+        this.user = user;
+    }
 }

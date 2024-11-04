@@ -12,7 +12,7 @@ import static com.growplan.common.code.ExceptionCode.INVALID_GENDER_TYPE;
 @AllArgsConstructor
 public enum GenderType {
 
-    GIRL("여아"), BOY("남아"), OTHER("기타");
+    FEMALE("여자"), MALE("남자");
     
     private final String code;
 

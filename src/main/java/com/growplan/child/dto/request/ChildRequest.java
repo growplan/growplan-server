@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChildRequest {
 
-    @NotBlank(message = "닉네임을 입력해주세요.")
+    @NotBlank(message = "아이 이름을 입력해주세요.")
     private String name;
 
-    @NotBlank(message = "생년월일을 입력해주세요.")
+    @NotBlank(message = "아이 생년월일을 입력해주세요.")
     private String birthdate;
 
-    @NotBlank(message = "성별을 입력해주세요.")
+    @NotBlank(message = "아이 성별을 입력해주세요.")
     private String gender;
 
     @NotBlank(message = "신생아 키를 입력해주세요.")
@@ -25,4 +25,9 @@ public class ChildRequest {
 
     @NotBlank(message = "신생아 몸무게를 입력해주세요.")
     private Double bornWeight;
+
+    @NotBlank(message = "이른둥이 여부를 입력해주세요.")
+    private Boolean isPremature;
+
+    private Double birthWeeks;
 }
