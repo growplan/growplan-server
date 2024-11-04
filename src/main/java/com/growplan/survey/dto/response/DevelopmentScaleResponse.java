@@ -5,18 +5,18 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class DevelopmentResultResponse {
+public class DevelopmentScaleResponse {
 
     private final String developmentType;
     private final Integer score;
     private final Boolean isRisk;
 
-    public static DevelopmentResultResponse of(
+    public static DevelopmentScaleResponse of(
             final String developmentType,
             final Integer score,
             final Boolean isRisk
     ) {
-        return new DevelopmentResultResponse(
+        return new DevelopmentScaleResponse(
                 developmentType,
                 score,
                 isRisk
