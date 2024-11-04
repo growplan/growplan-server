@@ -44,6 +44,11 @@ public class UserChild extends BaseEntity {
     @Column(nullable = false)
     private Double bornWeight;
 
+    @Column(nullable = false)
+    private Boolean isPremature;
+
+    private Double birthWeeks;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -60,6 +65,8 @@ public class UserChild extends BaseEntity {
             final GenderType gender,
             final Double bornHeight,
             final Double bornWeight,
+            final Boolean isPremature,
+            final Double birthWeeks,
             final User user
     ) {
         this.name = name;
@@ -67,6 +74,26 @@ public class UserChild extends BaseEntity {
         this.gender = gender;
         this.bornHeight = bornHeight;
         this.bornWeight = bornWeight;
+        this.isPremature = isPremature;
+        this.birthWeeks = birthWeeks;
         this.user = user;
+    }
+
+    public void updateUserChild(
+            final String name,
+            final String birthdate,
+            final GenderType gender,
+            final Double bornHeight,
+            final Double bornWeight,
+            final Boolean isPremature,
+            final Double birthWeeks
+    ) {
+        this.name = name;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.bornHeight = bornHeight;
+        this.bornWeight = bornWeight;
+        this.isPremature = isPremature;
+        this.birthWeeks = birthWeeks;
     }
 }

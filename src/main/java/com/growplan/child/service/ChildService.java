@@ -49,7 +49,26 @@ public class ChildService {
                 GenderType.of(childRequest.getGender()),
                 childRequest.getBornHeight(),
                 childRequest.getBornHeight(),
+                childRequest.getIsPremature(),
+                childRequest.getBirthWeeks(),
                 user
+        );
+
+        childRepository.save(userChild);
+    }
+
+    public void updateChild(final Long userId, final Long childId, final ChildRequest childRequest) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        userChild.updateUserChild(
+                childRequest.getName(),
+                childRequest.getBirthdate(),
+                GenderType.of(childRequest.getGender()),
+                childRequest.getBornHeight(),
+                childRequest.getBornHeight(),
+                childRequest.getIsPremature(),
+                childRequest.getBirthWeeks()
         );
 
         childRepository.save(userChild);
