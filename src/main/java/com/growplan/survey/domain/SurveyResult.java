@@ -38,4 +38,16 @@ public class SurveyResult extends BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public SurveyResult(
+            final UserChild userChild,
+            final DevelopmentType developmentType,
+            final Integer score,
+            final Boolean isRisk
+    ) {
+        this.userChild = userChild;
+        this.developmentType = developmentType;
+        this.score = score;
+        this.isRisk = isRisk;
+    }
 }
