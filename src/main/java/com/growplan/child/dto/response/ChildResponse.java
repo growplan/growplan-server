@@ -13,6 +13,8 @@ public class ChildResponse {
     private final String gender;
     private final Double bornHeight;
     private final Double bornWeight;
+    private final Boolean isPremature;
+    private final Double birthWeeks;
 
     public static ChildResponse of(final UserChild userChild) {
         return new ChildResponse(
@@ -20,7 +22,9 @@ public class ChildResponse {
                 userChild.getBirthdate(),
                 userChild.getGender().getCode(),
                 userChild.getBornHeight(),
-                userChild.getBornWeight()
+                userChild.getBornWeight(),
+                userChild.getIsPremature(),
+                userChild.getBirthWeeks()
         );
     }
 }

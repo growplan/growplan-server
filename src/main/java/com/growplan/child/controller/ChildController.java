@@ -36,8 +36,8 @@ public class ChildController {
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        childService.getChild(userId, childId);
-        return ResponseEntity.noContent().build();
+        final ChildResponse childResponse = childService.getChild(userId, childId);
+        return ResponseEntity.ok().body(childResponse);
     }
 
     @PutMapping("/{childId}")
