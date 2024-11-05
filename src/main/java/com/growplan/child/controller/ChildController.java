@@ -49,4 +49,13 @@ public class ChildController {
         childService.updateChild(userId, childId, childRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteChild(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId
+    ) {
+        childService.deleteChild(userId, childId);
+        return ResponseEntity.noContent().build();
+    }
 }
