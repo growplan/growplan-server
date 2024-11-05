@@ -1,25 +1,28 @@
 package com.growplan.survey.dto.response;
 
+import com.growplan.survey.domain.ChildSurvey;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
 public class DevelopmentResultResponse {
 
     private final String developmentType;
-    private final Integer score;
-    private final Boolean isRisk;
+    private final Integer totalScore;
+    private final List<String> scripts;
 
-    public static DevelopmentResultResponse of(
-            final String developmentType,
-            final Integer score,
-            final Boolean isRisk
-    ) {
+    public static DevelopmentResultResponse of(final List<ChildSurvey> surveys, final Integer totalScore) {
+        final List<String> scripts = surveys.stream()
+                .map(survey -> survey.getSurvey().getScript())
+                .toList();
+
         return new DevelopmentResultResponse(
-                developmentType,
-                score,
-                isRisk
+                surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType().getType(),
+                totalScore,
+                scripts
         );
     }
 }

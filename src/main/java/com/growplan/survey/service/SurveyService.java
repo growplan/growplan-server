@@ -9,6 +9,7 @@ import com.growplan.survey.domain.repository.ChildSurveyRepository;
 import com.growplan.survey.domain.repository.SurveyRepository;
 import com.growplan.survey.dto.request.ChildSurveyRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
+import com.growplan.survey.dto.response.SurveyDetailListResponse;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_CHILD_SURVEY;
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
@@ -32,15 +35,37 @@ public class SurveyService {
     private final ChildSurveyRepository childSurveyRepository;
 
     @Transactional(readOnly = true)
-    public SurveyListResponse getChildSurvey(final Long userId, final Long childId) {
+    public SurveyListResponse getChildSurveys(final Long userId, final Long childId) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        final Double validAge = calculateAge(userChild.getBirthdate());
+        final LocalDate currentDate = LocalDate.now();
+
+        final List<ChildSurvey> childSurveys = childSurveyRepository.findByValidAge(validAge, currentDate);
+
+        final Map<String, List<ChildSurvey>> groupedChildSurveys = childSurveys.stream()
+                .collect(Collectors.groupingBy(childSurvey -> childSurvey.getSurvey().getSurveyGroup().getTitle()));
+
+        return SurveyListResponse.of(groupedChildSurveys);
+    }
+
+    @Transactional(readOnly = true)
+    public SurveyDetailListResponse getSurveyDetail(final Long userId, final Long childId, final String developmentType) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
 
-        final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(validAge);
+        final LocalDate currentDate = LocalDate.now();
+        final List<ChildSurvey> childSurveys = childSurveyRepository.findByChildIdAndDevelopmentType(currentDate, developmentType, childId);
 
-        return SurveyListResponse.of(surveys);
+        if (childSurveys.isEmpty()) {
+            final List<Survey> surveys = surveyRepository.findByValidAgeAndDevelopmentType(validAge, developmentType);
+            return SurveyDetailListResponse.fromSurveys(surveys);
+        }
+
+        return SurveyDetailListResponse.fromChildSurveys(childSurveys);
     }
 
     public void saveChildSurvey(final Long userId, final Long childId, final ChildSurveyRequest childSurveyRequest) {
@@ -48,8 +73,6 @@ public class SurveyService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
-
-        final List<Survey> surveys = surveyRepository.findByValidAgeLessThanOrEqualTo(validAge);
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {

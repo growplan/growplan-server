@@ -4,6 +4,7 @@ import com.growplan.child.domain.type.GenderType;
 import com.growplan.common.BaseEntity;
 import com.growplan.record.domain.ChildRecord;
 import com.growplan.survey.domain.ChildSurvey;
+import com.growplan.survey.domain.SurveyResult;
 import com.growplan.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -58,6 +59,9 @@ public class UserChild extends BaseEntity {
 
     @OneToMany(mappedBy = "userChild", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<ChildSurvey> childSurveys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userChild", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<SurveyResult> surveyResults = new ArrayList<>();
 
     public UserChild(
             final String name,

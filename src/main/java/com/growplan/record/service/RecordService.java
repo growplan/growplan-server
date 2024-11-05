@@ -5,13 +5,13 @@ import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.record.domain.ChildRecord;
 import com.growplan.record.domain.ChildRecordTag;
-import com.growplan.survey.domain.repository.DevelopmentTypeRepository;
 import com.growplan.record.domain.repository.RecordRepository;
 import com.growplan.record.domain.repository.RecordTagRepository;
 import com.growplan.record.dto.request.RecordRequest;
 import com.growplan.record.dto.response.RecordDetailResponse;
 import com.growplan.record.dto.response.RecordListResponse;
 import com.growplan.survey.domain.DevelopmentType;
+import com.growplan.survey.domain.repository.DevelopmentTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +46,8 @@ public class RecordService {
     }
 
     public void saveRecord(final Long userId, final Long childId, final RecordRequest recordRequest) {
+        // TODO 사진 저장 로직 필요
+        
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
@@ -53,7 +55,7 @@ public class RecordService {
 
         final ChildRecord savedRecord = recordRepository.save(record);
 
-        final List<DevelopmentType> developmentTypes = developmentTypeRepository.findAllByType(recordRequest.getDevelopmentTypes());
+        final List<DevelopmentType> developmentTypes = developmentTypeRepository.findByType(recordRequest.getDevelopmentTypes());
         List<ChildRecordTag> childRecordTags = new ArrayList<>();
 
         for (final DevelopmentType developmentType : developmentTypes)

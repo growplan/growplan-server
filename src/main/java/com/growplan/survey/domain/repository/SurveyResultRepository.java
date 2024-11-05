@@ -1,0 +1,19 @@
+package com.growplan.survey.domain.repository;
+
+import com.growplan.survey.domain.SurveyResult;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+
+public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long> {
+
+    @Query("""
+            SELECT sr FROM SurveyResult sr
+            WHERE sr.createdAt = (
+                SELECT MAX(s.createdAt) FROM SurveyResult s
+            ) AND sr.userChild.id = :childId
+            """)
+    List<SurveyResult> findRecentSurveyResults(@Param("childId") final Long childId);
+}

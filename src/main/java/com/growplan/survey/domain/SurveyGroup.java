@@ -3,7 +3,6 @@ package com.growplan.survey.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,25 +14,19 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Survey {
+public class SurveyGroup {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Double validAge;
-
-    @Column(nullable = false)
-    private String script;
-
-    @Column(nullable = false)
-    private Double weight;
+    private String title;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "survey_group_id", nullable = false)
-    private SurveyGroup surveyGroup;
+    @JoinColumn(name = "development_type_id", nullable = false)
+    private DevelopmentType developmentType;
 
-    @OneToMany(mappedBy = "survey", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ChildSurvey> childSurveys = new ArrayList<>();
+    @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Survey> surveys = new ArrayList<>();
 }

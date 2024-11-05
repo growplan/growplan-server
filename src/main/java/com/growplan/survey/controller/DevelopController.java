@@ -1,7 +1,7 @@
 package com.growplan.survey.controller;
 
-import com.growplan.survey.dto.response.DevelopmentDetailResultResponse;
-import com.growplan.survey.dto.response.DevelopmentResultListResponse;
+import com.growplan.survey.dto.response.DevelopmentResultResponse;
+import com.growplan.survey.dto.response.DevelopmentScaleSurveyResponse;
 import com.growplan.survey.service.DevelopService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +18,21 @@ public class DevelopController {
     private final DevelopService developService;
 
     @GetMapping
-    public ResponseEntity<DevelopmentResultListResponse> getAllDevelopmentResults(
+    public ResponseEntity<DevelopmentScaleSurveyResponse> getDevelopmentScaleAndSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        final DevelopmentResultListResponse response = developService.getAllDevelopmentResults(userId, childId);
+        final DevelopmentScaleSurveyResponse response = developService.getDevelopmentScalesAndSurveys(userId, childId);
         return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{developmentType}")
-    public ResponseEntity<DevelopmentDetailResultResponse> getDevelopmentResult(
+    public ResponseEntity<DevelopmentResultResponse> getDevelopmentResult(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @PathVariable("developmentType") final String developmentType
     ) {
-        final DevelopmentDetailResultResponse response = developService.getDevelopmentResult(userId, childId, developmentType);
+        final DevelopmentResultResponse response = developService.getDevelopmentResult(userId, childId, developmentType);
         return ResponseEntity.ok().body(response);
     }
 }

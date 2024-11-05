@@ -4,9 +4,13 @@ import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.survey.domain.ChildSurvey;
+import com.growplan.survey.domain.SurveyGroup;
+import com.growplan.survey.domain.SurveyResult;
 import com.growplan.survey.domain.repository.ChildSurveyRepository;
-import com.growplan.survey.dto.response.DevelopmentDetailResultResponse;
-import com.growplan.survey.dto.response.DevelopmentResultListResponse;
+import com.growplan.survey.domain.repository.SurveyGroupRepository;
+import com.growplan.survey.domain.repository.SurveyResultRepository;
+import com.growplan.survey.dto.response.DevelopmentResultResponse;
+import com.growplan.survey.dto.response.DevelopmentScaleSurveyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static com.growplan.common.code.ExceptionCode.NOT_FOUND_CHILD_SURVEY;
 import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
 
 @Service
@@ -28,33 +30,52 @@ public class DevelopService {
 
     private final ChildRepository childRepository;
     private final ChildSurveyRepository childSurveyRepository;
+    private final SurveyResultRepository surveyResultRepository;
+    private final SurveyGroupRepository surveyGroupRepository;
 
-    public DevelopmentResultListResponse getDevelopmentResultsAndSurveys(final Long userId, final Long childId) {
-        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
-
-        final Double birthdate = calculateAge(userChild.getBirthdate());
-
-        final List<ChildSurvey> surveys = childSurveyRepository.findByValidAge(birthdate);
-
-        final Map<String, Integer> resultScoreMap = calculateAllDevelopmentScores(surveys);
-
-        return DevelopmentResultListResponse.of(resultScoreMap);
-    }
-
-    public DevelopmentDetailResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
+    public DevelopmentScaleSurveyResponse getDevelopmentScalesAndSurveys(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
+        final Integer months = calculateAgeInMonths(userChild.getBirthdate());
 
-        final List<ChildSurvey> surveys = childSurveyRepository.findByValidAgeAndDevelopmentType(validAge, developmentType);
+        final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId());
+
+        final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByValidAge(validAge);
+
+        return DevelopmentScaleSurveyResponse.of(userChild, months, surveyResults, surveyGroups);
+    }
+
+    public DevelopmentResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        final LocalDate currentDate = LocalDate.now();
+        final List<ChildSurvey> surveys = childSurveyRepository.findByChildIdAndDevelopmentType(currentDate, developmentType, userChild.getId());
+
+        if (surveys.isEmpty()) {
+            throw new BadRequestException(NOT_FOUND_CHILD_SURVEY);
+        }
 
         final Integer developmentScore = calculateDevelopmentScore(surveys);
+        final Boolean isRisk = calculateRisk(developmentScore);
 
+        final SurveyResult surveyResult = new SurveyResult(
+                userChild,
+                surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType(),
+                developmentScore,
+                isRisk
+        );
 
-        return DevelopmentDetailResultResponse.of(surveys, developmentScore);
+        surveyResultRepository.save(surveyResult);
 
+        // TODO 점수별 Script 추가 -> DB 반영 필요
+        return DevelopmentResultResponse.of(surveys, developmentScore);
+    }
+
+    private Boolean calculateRisk(final Integer developmentScore) {
+        return developmentScore <= 6;
     }
 
     private Integer calculateDevelopmentScore(final List<ChildSurvey> surveys) {
@@ -76,41 +97,27 @@ public class DevelopService {
             totalScore += (weight / totalWeight) * (status / 4.0);
         }
 
-        final double developmentScore = totalScore * 30.0;
+        final double developmentScore = totalScore * 24.0;
         return (int) Math.round(developmentScore);
     }
 
-    private Map<String, Integer> calculateAllDevelopmentScores(final List<ChildSurvey> surveys) {
-        Map<String, List<ChildSurvey>> surveyMap = new HashMap<>();
-
-        for (ChildSurvey survey : surveys) {
-            final String developmentType = survey.getSurvey().getDevelopmentType().getType();
-            surveyMap.computeIfAbsent(developmentType, k -> new ArrayList<>()).add(survey);
-        }
-
-        Map<String, Integer> resultScoreMap = new HashMap<>();
-
-        for (Map.Entry<String, List<ChildSurvey>> entry : surveyMap.entrySet()) {
-            final String developmentType = entry.getKey();
-            final List<ChildSurvey> childSurveys = entry.getValue();
-
-            final Integer score = calculateDevelopmentScore(childSurveys);
-            resultScoreMap.put(developmentType, score);
-        }
-
-        return resultScoreMap;
-    }
-
-    private Double calculateAge(final String birthdateStr) {
+    private Period getAgePeriod(final String birthdateStr) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         final LocalDate birthdate = LocalDate.parse(birthdateStr, formatter);
         final LocalDate today = LocalDate.now();
+        return Period.between(birthdate, today);
+    }
 
-        final Period period = Period.between(birthdate, today);
+    private Double calculateAge(final String birthdateStr) {
+        final Period period = getAgePeriod(birthdateStr);
         final int years = period.getYears();
         final int months = period.getMonths();
 
-        final double ageInYears = years + months / 12.0;
-        return Math.round(ageInYears * 10.0) / 100.0;
+        return years + (months / 100.0);
+    }
+
+    private int calculateAgeInMonths(final String birthdateStr) {
+        final Period period = getAgePeriod(birthdateStr);
+        return period.getYears() * 12 + period.getMonths();
     }
 }
