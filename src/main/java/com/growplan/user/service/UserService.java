@@ -40,22 +40,22 @@ public class UserService {
     }
 
     public SignUpResponse signUp(final SignUpRequest signUpRequest) {
+        final UserSign userSign = new UserSign(
+                signUpRequest.getUsername(),
+                signUpRequest.getPassword()
+        );
+
+        final UserSign savedUserSign = userSignRepository.save(userSign);
+
         final User user = new User(
                 signUpRequest.getName(),
                 signUpRequest.getBirthdate(),
                 signUpRequest.getEmail(),
-                signUpRequest.getNumber()
+                signUpRequest.getNumber(),
+                savedUserSign
         );
 
         final User savedUser = userRepository.save(user);
-
-        final UserSign userSign = new UserSign(
-                signUpRequest.getUsername(),
-                signUpRequest.getPassword(),
-                savedUser
-        );
-
-        userSignRepository.save(userSign);
 
         return SignUpResponse.of(savedUser);
     }

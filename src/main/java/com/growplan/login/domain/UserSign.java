@@ -23,13 +23,11 @@ public class UserSign {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(mappedBy = "userSign")
     private User user;
 
-    public UserSign(final String username, final String password, final User user) {
+    public UserSign(final String username, final String password) {
         this.username = username;
         this.password = password;
-        this.user = user;
     }
 }
