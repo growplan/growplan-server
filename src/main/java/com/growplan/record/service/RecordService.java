@@ -53,7 +53,7 @@ public class RecordService {
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild);
         final ChildRecord savedRecord = recordRepository.save(record);
 
-        saveChildRecordTags(savedRecord);
+        saveChildRecordTags(savedRecord, recordRequest.getDevelopmentTypes());
     }
 
     public void updateRecord(final Long userId, final Long childId, final Long recordId, final RecordRequest recordRequest) {
@@ -65,11 +65,11 @@ public class RecordService {
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild());
         final ChildRecord savedRecord = recordRepository.save(record);
 
-        saveChildRecordTags(savedRecord);
+        saveChildRecordTags(savedRecord, recordRequest.getDevelopmentTypes());
     }
 
-    private void saveChildRecordTags(final ChildRecord savedRecord) {
-        List<DevelopmentType> developmentTypes = developmentTypeRepository.findAll();
+    private void saveChildRecordTags(final ChildRecord savedRecord, final List<String> selectedTypes) {
+        List<DevelopmentType> developmentTypes = developmentTypeRepository.findByTypeIn(selectedTypes);
         List<ChildRecordTag> childRecordTags = new ArrayList<>();
 
         for (DevelopmentType developmentType : developmentTypes) {
