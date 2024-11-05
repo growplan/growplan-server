@@ -1,7 +1,7 @@
 package com.growplan.user.controller;
 
-import com.growplan.login.dto.request.SignUpRequest;
-import com.growplan.login.dto.response.SignUpResponse;
+import com.growplan.user.dto.request.SignUpRequest;
+import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;

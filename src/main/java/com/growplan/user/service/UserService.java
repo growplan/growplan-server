@@ -3,8 +3,8 @@ package com.growplan.user.service;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.login.domain.UserSign;
 import com.growplan.login.domain.repository.UserSignRepository;
-import com.growplan.login.dto.request.SignUpRequest;
-import com.growplan.login.dto.response.SignUpResponse;
+import com.growplan.user.dto.request.SignUpRequest;
+import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
 import com.growplan.user.dto.request.UserUpdateRequest;
@@ -40,22 +40,22 @@ public class UserService {
     }
 
     public SignUpResponse signUp(final SignUpRequest signUpRequest) {
+        final UserSign userSign = new UserSign(
+                signUpRequest.getUsername(),
+                signUpRequest.getPassword()
+        );
+
+        final UserSign savedUserSign = userSignRepository.save(userSign);
+
         final User user = new User(
                 signUpRequest.getName(),
                 signUpRequest.getBirthdate(),
                 signUpRequest.getEmail(),
-                signUpRequest.getNumber()
+                signUpRequest.getNumber(),
+                savedUserSign
         );
 
         final User savedUser = userRepository.save(user);
-
-        final UserSign userSign = new UserSign(
-                signUpRequest.getUsername(),
-                signUpRequest.getPassword(),
-                savedUser
-        );
-
-        userSignRepository.save(userSign);
 
         return SignUpResponse.of(savedUser);
     }

@@ -1,6 +1,7 @@
 package com.growplan.child.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,13 +21,13 @@ public class ChildRequest {
     @NotBlank(message = "아이 성별을 입력해주세요.")
     private String gender;
 
-    @NotBlank(message = "신생아 키를 입력해주세요.")
+    @NotNull(message = "신생아 키를 입력해주세요.")
     private Double bornHeight;
 
-    @NotBlank(message = "신생아 몸무게를 입력해주세요.")
+    @NotNull(message = "신생아 몸무게를 입력해주세요.")
     private Double bornWeight;
 
-    @NotBlank(message = "이른둥이 여부를 입력해주세요.")
+    @NotNull(message = "이른둥이 여부를 입력해주세요.")
     private Boolean isPremature;
 
     private Double birthWeeks;

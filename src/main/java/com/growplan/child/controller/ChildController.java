@@ -36,8 +36,8 @@ public class ChildController {
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
-        childService.getChild(userId, childId);
-        return ResponseEntity.noContent().build();
+        final ChildResponse childResponse = childService.getChild(userId, childId);
+        return ResponseEntity.ok().body(childResponse);
     }
 
     @PutMapping("/{childId}")
@@ -47,6 +47,15 @@ public class ChildController {
             @RequestBody @Valid final ChildRequest childRequest
     ) {
         childService.updateChild(userId, childId, childRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{childId}")
+    public ResponseEntity<Void> deleteChild(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId
+    ) {
+        childService.deleteChild(userId, childId);
         return ResponseEntity.noContent().build();
     }
 }
