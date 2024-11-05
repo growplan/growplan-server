@@ -1,4 +1,4 @@
-package com.growplan.login.dto.request;
+package com.growplan.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;

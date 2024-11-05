@@ -1,4 +1,4 @@
-package com.growplan.login.dto.response;
+package com.growplan.user.dto.response;
 
 import com.growplan.user.domain.User;
 import lombok.Getter;
