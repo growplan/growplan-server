@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users/{userId}/children/{childId}/surveys")
@@ -40,10 +42,9 @@ public class SurveyController {
     public ResponseEntity<Void> saveChildSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
-            @RequestBody @Valid final ChildSurveyRequest childSurveyRequest
+            @RequestBody @Valid final List<ChildSurveyRequest> childSurveyRequests
     ) {
-        // TOOD 수정 필요
-        surveyService.saveChildSurvey(userId, childId, childSurveyRequest);
+        surveyService.saveChildSurvey(userId, childId, childSurveyRequests);
         return ResponseEntity.noContent().build();
     }
 
