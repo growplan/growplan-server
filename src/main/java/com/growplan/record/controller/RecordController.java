@@ -55,4 +55,14 @@ public class RecordController {
         recordService.updateRecord(userId, childId, recordId, recordRequest);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{recordId}")
+    public ResponseEntity<Void> deleteRecord(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @PathVariable("recordId") final Long recordId
+    ) {
+        recordService.deleteRecord(userId, childId, recordId);
+        return ResponseEntity.noContent().build();
+    }
 }

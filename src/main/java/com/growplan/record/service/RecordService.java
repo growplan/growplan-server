@@ -78,4 +78,11 @@ public class RecordService {
 
         recordTagRepository.saveAll(childRecordTags);
     }
+
+    public void deleteRecord(final Long userId, final Long childId, final Long recordId) {
+        final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_RECORD));
+
+        recordRepository.delete(childRecord);
+    }
 }
