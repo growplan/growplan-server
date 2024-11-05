@@ -47,19 +47,34 @@ public class RecordService {
 
     public void saveRecord(final Long userId, final Long childId, final RecordRequest recordRequest) {
         // TODO 사진 저장 로직 필요
-        
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild);
-
         final ChildRecord savedRecord = recordRepository.save(record);
 
-        final List<DevelopmentType> developmentTypes = developmentTypeRepository.findByType(recordRequest.getDevelopmentTypes());
+        saveChildRecordTags(savedRecord);
+    }
+
+    public void updateRecord(final Long userId, final Long childId, final Long recordId, final RecordRequest recordRequest) {
+        final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_RECORD));
+
+        recordRepository.delete(childRecord);
+
+        final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild());
+        final ChildRecord savedRecord = recordRepository.save(record);
+
+        saveChildRecordTags(savedRecord);
+    }
+
+    private void saveChildRecordTags(final ChildRecord savedRecord) {
+        List<DevelopmentType> developmentTypes = developmentTypeRepository.findAll();
         List<ChildRecordTag> childRecordTags = new ArrayList<>();
 
-        for (final DevelopmentType developmentType : developmentTypes)
+        for (DevelopmentType developmentType : developmentTypes) {
             childRecordTags.add(new ChildRecordTag(savedRecord, developmentType));
+        }
 
         recordTagRepository.saveAll(childRecordTags);
     }

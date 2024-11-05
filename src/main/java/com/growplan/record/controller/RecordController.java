@@ -17,7 +17,7 @@ public class RecordController {
     private final RecordService recordService;
 
     @GetMapping
-    public ResponseEntity<RecordListResponse> getSurveys(
+    public ResponseEntity<RecordListResponse> getRecords(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
     ) {
@@ -26,7 +26,7 @@ public class RecordController {
     }
 
     @GetMapping("/{recordId}")
-    public ResponseEntity<RecordDetailResponse> getSurvey(
+    public ResponseEntity<RecordDetailResponse> getRecord(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @PathVariable("recordId") final Long recordId
@@ -36,12 +36,23 @@ public class RecordController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> getSurvey(
+    public ResponseEntity<Void> saveRecord(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @RequestBody @Valid final RecordRequest recordRequest
     ) {
         recordService.saveRecord(userId, childId, recordRequest);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{recordId}")
+    public ResponseEntity<Void> updateRecord(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @PathVariable("recordId") final Long recordId,
+            @RequestBody @Valid final RecordRequest recordRequest
+    ) {
+        recordService.updateRecord(userId, childId, recordId, recordRequest);
         return ResponseEntity.noContent().build();
     }
 }
