@@ -20,7 +20,7 @@ public class DevelopmentDetailResultResponse {
                 .toList();
 
         return new DevelopmentDetailResultResponse(
-                surveys.get(0).getSurvey().getDevelopmentType().getType(),
+                surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType().getType(),
                 totalScore,
                 scripts
         );

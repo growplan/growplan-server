@@ -9,13 +9,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SurveyDetailResponse {
 
-    private final Long id;
+    private final Long surveyId;
+    private final Long childSurveyId;
     private final String script;
     private final Integer status;
 
     public static SurveyDetailResponse of(final Survey survey) {
         return new SurveyDetailResponse(
                 survey.getId(),
+                null,
                 survey.getScript(),
                 null
         );
@@ -23,6 +25,7 @@ public class SurveyDetailResponse {
 
     public static SurveyDetailResponse of(final ChildSurvey childSurvey) {
         return new SurveyDetailResponse(
+                childSurvey.getSurvey().getId(),
                 childSurvey.getId(),
                 childSurvey.getSurvey().getScript(),
                 childSurvey.getStatus()
