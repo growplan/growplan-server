@@ -50,7 +50,7 @@ public class ChildController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{childId}")
     public ResponseEntity<Void> deleteChild(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId
