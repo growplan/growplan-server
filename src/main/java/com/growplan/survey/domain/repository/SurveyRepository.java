@@ -1,7 +1,6 @@
 package com.growplan.survey.domain.repository;
 
 import com.growplan.survey.domain.Survey;
-import com.growplan.survey.domain.SurveyElement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

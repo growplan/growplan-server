@@ -1,7 +1,6 @@
 package com.growplan.survey.domain.repository;
 
 import com.growplan.survey.domain.ChildSurvey;
-import com.growplan.survey.domain.SurveyElement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,12 +29,4 @@ public interface ChildSurveyRepository extends JpaRepository<ChildSurvey, Long> 
             @Param("developmentType") final String developmentType,
             @Param("childId") final Long childId
     );
-
-    @Query("""
-            SELECT new com.growplan.survey.domain.SurveyElement(cs, s.script) FROM ChildSurvey cs
-            LEFT JOIN FETCH cs.survey s
-            LEFT JOIN FETCH s.surveyGroup.developmentType d
-            WHERE s.validAge <= :childAge AND d.type = :developmentType
-            """)
-    List<SurveyElement> findByValidAgeAndDevelopmentType(@Param("childAge") final Double childAge, @Param("developmentType") final String developmentType);
 }

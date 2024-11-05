@@ -8,18 +8,18 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class DevelopmentDetailResultResponse {
+public class DevelopmentResultResponse {
 
     private final String developmentType;
     private final Integer totalScore;
     private final List<String> scripts;
 
-    public static DevelopmentDetailResultResponse of(final List<ChildSurvey> surveys, final Integer totalScore) {
+    public static DevelopmentResultResponse of(final List<ChildSurvey> surveys, final Integer totalScore) {
         final List<String> scripts = surveys.stream()
                 .map(survey -> survey.getSurvey().getScript())
                 .toList();
 
-        return new DevelopmentDetailResultResponse(
+        return new DevelopmentResultResponse(
                 surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType().getType(),
                 totalScore,
                 scripts
