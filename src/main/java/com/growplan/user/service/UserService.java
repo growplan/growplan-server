@@ -2,11 +2,11 @@ package com.growplan.user.service;
 
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.login.domain.UserSign;
+import com.growplan.login.domain.repository.UserSignRepository;
 import com.growplan.login.dto.request.SignUpRequest;
 import com.growplan.login.dto.response.SignUpResponse;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
-import com.growplan.user.domain.repository.UserSignRepository;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
