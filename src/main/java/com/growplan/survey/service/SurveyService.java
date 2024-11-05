@@ -68,11 +68,29 @@ public class SurveyService {
         return SurveyDetailListResponse.fromChildSurveys(childSurveys);
     }
 
-    public void saveChildSurvey(final Long userId, final Long childId, final ChildSurveyRequest childSurveyRequest) {
+    public void saveChildSurvey(final Long userId, final Long childId, final List<ChildSurveyRequest> childSurveyRequests) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
-        final Double validAge = calculateAge(userChild.getBirthdate());
+        // TODO surveyId 중 중복된 값 제거
+        final List<Long> surveyIds = childSurveyRequests.stream()
+                .map(ChildSurveyRequest::getId)
+                .collect(Collectors.toList());
+
+        final List<Survey> surveys = surveyRepository.findByIdIn(surveyIds);
+
+        final Map<Long, Survey> surveyMap = surveys.stream()
+                .collect(Collectors.toMap(Survey::getId, survey -> survey));
+
+        final List<ChildSurvey> childSurveys = childSurveyRequests.stream()
+                .map(childSurveyRequest -> new ChildSurvey(
+                        childSurveyRequest.getStatus(),
+                        userChild,
+                        surveyMap.get(childSurveyRequest.getId())
+                ))
+                .collect(Collectors.toList());
+
+        childSurveyRepository.saveAll(childSurveys);
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
@@ -93,7 +111,6 @@ public class SurveyService {
         final int years = period.getYears();
         final int months = period.getMonths();
 
-        final double ageInYears = years + months / 12.0;
-        return Math.round(ageInYears * 10.0) / 100.0;
+        return years + (months / 100.0);
     }
 }

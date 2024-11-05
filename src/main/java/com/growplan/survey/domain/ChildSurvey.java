@@ -38,6 +38,16 @@ public class ChildSurvey extends BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public ChildSurvey(
+            final Integer status,
+            final UserChild userChild,
+            final Survey survey
+    ) {
+        this.status = status;
+        this.userChild = userChild;
+        this.survey = survey;
+    }
+
     public void updateChildSurvey(final Integer status) {
         this.status = status;
     }
