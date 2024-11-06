@@ -9,11 +9,10 @@ import java.util.List;
 
 public interface SurveyGroupRepository extends JpaRepository<SurveyGroup, Long> {
 
-    // TODO max min 추가
     @Query("""
             SELECT sg FROM SurveyGroup sg
             LEFT JOIN FETCH sg.surveys s
-            WHERE s.validAge >= :validAge
+            WHERE s.minAge <= :childAge AND s.maxAge >= :childAge
             """)
-    List<SurveyGroup> findSurveyGroupByValidAge(@Param("validAge") final Double validAge);
+    List<SurveyGroup> findSurveyGroupByValidAge(@Param("childAge") final Double childAge);
 }
