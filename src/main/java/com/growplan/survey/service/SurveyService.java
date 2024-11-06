@@ -72,25 +72,33 @@ public class SurveyService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
-        // TODO surveyId 중 중복된 값 제거
-        final List<Long> surveyIds = childSurveyRequests.stream()
-                .map(ChildSurveyRequest::getId)
-                .collect(Collectors.toList());
+        final List<Long> surveyIds = getSurveyIds(childSurveyRequests);
 
         final List<Survey> surveys = surveyRepository.findByIdIn(surveyIds);
 
         final Map<Long, Survey> surveyMap = surveys.stream()
                 .collect(Collectors.toMap(Survey::getId, survey -> survey));
 
-        final List<ChildSurvey> childSurveys = childSurveyRequests.stream()
+        final List<ChildSurvey> childSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
+
+        childSurveyRepository.saveAll(childSurveys);
+    }
+
+    private List<Long> getSurveyIds(final List<ChildSurveyRequest> childSurveyRequests) {
+        return childSurveyRequests.stream()
+                .map(ChildSurveyRequest::getId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private List<ChildSurvey> createChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
+        return childSurveyRequests.stream()
                 .map(childSurveyRequest -> new ChildSurvey(
                         childSurveyRequest.getStatus(),
                         userChild,
                         surveyMap.get(childSurveyRequest.getId())
                 ))
                 .collect(Collectors.toList());
-
-        childSurveyRepository.saveAll(childSurveys);
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
