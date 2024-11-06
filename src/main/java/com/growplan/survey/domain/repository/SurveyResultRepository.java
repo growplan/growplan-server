@@ -16,4 +16,13 @@ public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long
             ) AND sr.userChild.id = :childId
             """)
     List<SurveyResult> findRecentSurveyResults(@Param("childId") final Long childId);
+
+    @Query("""
+            SELECT sr FROM SurveyResult sr
+            LEFT JOIN FETCH sr.developmentType dt
+            WHERE FUNCTION('YEAR', sr.updatedAt) = :year 
+            AND FUNCTION('MONTH', sr.updatedAt) = :month
+            AND sr.userChild.id = :childId
+            """)
+    List<SurveyResult> findByYearMonth(@Param("year") final Integer year, @Param("month") final Integer month, @Param("childId") final Long childId);
 }
