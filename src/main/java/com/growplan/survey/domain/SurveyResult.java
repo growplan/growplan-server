@@ -50,4 +50,12 @@ public class SurveyResult extends BaseEntity {
         this.score = score;
         this.isRisk = isRisk;
     }
+
+    public void updateSurveyResult(
+            final Integer score,
+            final Boolean isRisk
+    ) {
+        this.score = score;
+        this.isRisk = isRisk;
+    }
 }

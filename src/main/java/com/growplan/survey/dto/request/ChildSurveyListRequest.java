@@ -1,7 +1,6 @@
 package com.growplan.survey.dto.request;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
@@ -9,13 +8,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ChildSurveyUpdateRequest {
+public class ChildSurveyListRequest {
 
-    @Min(0)
-    @Max(3)
-    @NotNull(message = "숙련도를 입력해주세요.")
-    private Integer status;
+    @Valid
+    @NotNull
+    @Size(min = 1, message = "설문 항목이 최소 1개 이상 필요합니다.")
+    private List<ChildSurveyRequest> surveys;
 }

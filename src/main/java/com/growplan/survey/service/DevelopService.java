@@ -52,30 +52,26 @@ public class DevelopService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
         final LocalDate currentDate = LocalDate.now();
-        final List<ChildSurvey> surveys = childSurveyRepository.findByChildIdAndDevelopmentType(currentDate, developmentType, userChild.getId());
 
-        if (surveys.isEmpty()) {
-            throw new BadRequestException(NOT_FOUND_CHILD_SURVEY);
-        }
+        final List<ChildSurvey> surveys = getSurveys(userChild, currentDate, developmentType);
 
         final Integer developmentScore = calculateDevelopmentScore(surveys);
         final Boolean isRisk = calculateRisk(developmentScore);
 
-        final SurveyResult surveyResult = new SurveyResult(
-                userChild,
-                surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType(),
-                developmentScore,
-                isRisk
-        );
+        final SurveyResult surveyResult = getOrCreateSurveyResult(userChild, developmentType, currentDate, developmentScore, isRisk, surveys);
 
-        surveyResultRepository.save(surveyResult);
+        updateSurveyScore(surveyResult, developmentScore, isRisk);
 
         // TODO 점수별 Script 추가 -> DB 반영 필요
         return DevelopmentResultResponse.of(surveys, developmentScore);
     }
 
-    private Boolean calculateRisk(final Integer developmentScore) {
-        return developmentScore <= 6;
+    private List<ChildSurvey> getSurveys(final UserChild userChild, final LocalDate date, final String developmentType) {
+        List<ChildSurvey> surveys = childSurveyRepository.findByChildIdAndDevelopmentType(date, developmentType, userChild.getId());
+        if (surveys.isEmpty()) {
+            throw new BadRequestException(NOT_FOUND_CHILD_SURVEY);
+        }
+        return surveys;
     }
 
     private Integer calculateDevelopmentScore(final List<ChildSurvey> surveys) {
@@ -99,6 +95,30 @@ public class DevelopService {
 
         final double developmentScore = totalScore * 24.0;
         return (int) Math.round(developmentScore);
+    }
+
+    private Boolean calculateRisk(final Integer developmentScore) {
+        return developmentScore <= 6;
+    }
+
+    private SurveyResult getOrCreateSurveyResult(final UserChild userChild, final String developmentType, final LocalDate currentDate, final Integer developmentScore, final Boolean isRisk, final List<ChildSurvey> surveys) {
+        return surveyResultRepository.findByDateAndDevelopmentType(currentDate, developmentType)
+                .orElseGet(() -> {
+                    SurveyResult newSurveyResult = new SurveyResult(
+                            userChild,
+                            surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType(),
+                            developmentScore,
+                            isRisk
+                    );
+                    return surveyResultRepository.save(newSurveyResult);
+                });
+    }
+
+    private void updateSurveyScore(final SurveyResult surveyResult, final Integer developmentScore, final Boolean isRisk) {
+        if (!surveyResult.getScore().equals(developmentScore)) {
+            surveyResult.updateSurveyResult(developmentScore, isRisk);
+            surveyResultRepository.save(surveyResult);
+        }
     }
 
     private Period getAgePeriod(final String birthdateStr) {

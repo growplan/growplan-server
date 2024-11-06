@@ -1,6 +1,6 @@
 package com.growplan.survey.controller;
 
-import com.growplan.survey.dto.request.ChildSurveyRequest;
+import com.growplan.survey.dto.request.ChildSurveyListRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyDetailListResponse;
 import com.growplan.survey.dto.response.SurveyListResponse;
@@ -40,10 +40,9 @@ public class SurveyController {
     public ResponseEntity<Void> saveChildSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
-            @RequestBody @Valid final ChildSurveyRequest childSurveyRequest
+            @RequestBody @Valid final ChildSurveyListRequest childSurveyListRequest
     ) {
-        // TOOD 수정 필요
-        surveyService.saveChildSurvey(userId, childId, childSurveyRequest);
+        surveyService.saveChildSurvey(userId, childId, childSurveyListRequest.getSurveys());
         return ResponseEntity.noContent().build();
     }
 

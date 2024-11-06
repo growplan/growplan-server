@@ -73,4 +73,11 @@ public class ChildService {
 
         childRepository.save(userChild);
     }
+
+    public void deleteChild(final Long userId, final Long childId) {
+        final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+
+        childRepository.delete(userChild);
+    }
 }

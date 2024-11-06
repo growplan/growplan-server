@@ -68,11 +68,37 @@ public class SurveyService {
         return SurveyDetailListResponse.fromChildSurveys(childSurveys);
     }
 
-    public void saveChildSurvey(final Long userId, final Long childId, final ChildSurveyRequest childSurveyRequest) {
+    public void saveChildSurvey(final Long userId, final Long childId, final List<ChildSurveyRequest> childSurveyRequests) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
 
-        final Double validAge = calculateAge(userChild.getBirthdate());
+        final List<Long> surveyIds = getSurveyIds(childSurveyRequests);
+
+        final List<Survey> surveys = surveyRepository.findByIdIn(surveyIds);
+
+        final Map<Long, Survey> surveyMap = surveys.stream()
+                .collect(Collectors.toMap(Survey::getId, survey -> survey));
+
+        final List<ChildSurvey> childSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
+
+        childSurveyRepository.saveAll(childSurveys);
+    }
+
+    private List<Long> getSurveyIds(final List<ChildSurveyRequest> childSurveyRequests) {
+        return childSurveyRequests.stream()
+                .map(ChildSurveyRequest::getId)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    private List<ChildSurvey> createChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
+        return childSurveyRequests.stream()
+                .map(childSurveyRequest -> new ChildSurvey(
+                        childSurveyRequest.getStatus(),
+                        userChild,
+                        surveyMap.get(childSurveyRequest.getId())
+                ))
+                .collect(Collectors.toList());
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
@@ -93,7 +119,6 @@ public class SurveyService {
         final int years = period.getYears();
         final int months = period.getMonths();
 
-        final double ageInYears = years + months / 12.0;
-        return Math.round(ageInYears * 10.0) / 100.0;
+        return years + (months / 100.0);
     }
 }
