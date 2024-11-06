@@ -35,7 +35,7 @@ public class ReportService {
         final List<SurveyResult> surveyResults = surveyResultRepository.findByYearMonth(targetDate.getYear(), targetDate.getDayOfMonth(), userChild.getId());
         final Map<String, Double> surveyMap = getSurveyMap(surveyResults);
 
-        return ReportListResponse.of(targetDate.getDayOfMonth(), surveyMap, null);
+        return ReportListResponse.of(targetDate.getMonthValue(), surveyMap, null);
     }
 
     private LocalDate getTargetDate(final LocalDate currentDate) {
