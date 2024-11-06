@@ -1,0 +1,27 @@
+package com.growplan.report.controller;
+
+import com.growplan.report.dto.response.ReportListResponse;
+import com.growplan.report.service.ReportService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/users/{userId}/children/{childId}/reports")
+public class ReportController {
+
+    private final ReportService reportService;
+
+    @GetMapping
+    public ResponseEntity<ReportListResponse> getReports(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId
+    ) {
+        final ReportListResponse reportListResponse = reportService.getReports(userId, childId);
+        return ResponseEntity.ok().body(reportListResponse);
+    }
+}
