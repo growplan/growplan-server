@@ -21,10 +21,10 @@ public class Survey {
     private Long id;
 
     @Column(nullable = false)
-    private Integer minAge;
+    private Double minAge;
 
     @Column(nullable = false)
-    private Integer maxAge;
+    private Double maxAge;
 
     @Column(nullable = false)
     private String script;
