@@ -1,6 +1,6 @@
 package com.growplan.survey.controller;
 
-import com.growplan.survey.dto.request.ChildSurveyRequest;
+import com.growplan.survey.dto.request.ChildSurveyListRequest;
 import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyDetailListResponse;
 import com.growplan.survey.dto.response.SurveyListResponse;
@@ -9,8 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,9 +40,9 @@ public class SurveyController {
     public ResponseEntity<Void> saveChildSurveys(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
-            @RequestBody @Valid final List<ChildSurveyRequest> childSurveyRequests
+            @RequestBody @Valid final ChildSurveyListRequest childSurveyListRequest
     ) {
-        surveyService.saveChildSurvey(userId, childId, childSurveyRequests);
+        surveyService.saveChildSurvey(userId, childId, childSurveyListRequest.getSurveys());
         return ResponseEntity.noContent().build();
     }
 

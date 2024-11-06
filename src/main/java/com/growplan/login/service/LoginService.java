@@ -49,7 +49,6 @@ public class LoginService {
         final UserSign userSign = userSignRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_USERNAME));
 
-        // TODO password 암호화 과정 추가
         if (!userSign.getPassword().equals(loginRequest.getPassword())) {
             throw new BadRequestException(INCORRECT_PASSWORD);
         }

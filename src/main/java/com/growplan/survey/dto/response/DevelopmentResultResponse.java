@@ -10,7 +10,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DevelopmentResultResponse {
 
-    private final String developmentType;
     private final Integer totalScore;
     private final List<String> scripts;
 
@@ -20,7 +19,6 @@ public class DevelopmentResultResponse {
                 .toList();
 
         return new DevelopmentResultResponse(
-                surveys.get(0).getSurvey().getSurveyGroup().getDevelopmentType().getType(),
                 totalScore,
                 scripts
         );

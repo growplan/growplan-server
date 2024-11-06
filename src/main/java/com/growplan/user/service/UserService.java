@@ -3,11 +3,11 @@ package com.growplan.user.service;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.login.domain.UserSign;
 import com.growplan.login.domain.repository.UserSignRepository;
-import com.growplan.user.dto.request.SignUpRequest;
-import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
+import com.growplan.user.dto.request.SignUpRequest;
 import com.growplan.user.dto.request.UserUpdateRequest;
+import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +75,9 @@ public class UserService {
     }
 
     public void deleteAccount(final Long userId) {
-        // TODO 연관 관계 찾아서 모두 삭제
-        userRepository.deleteById(userId);
+        final User user = userRepository.findById(userId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+
+        userRepository.deleteById(user.getId());
     }
 }

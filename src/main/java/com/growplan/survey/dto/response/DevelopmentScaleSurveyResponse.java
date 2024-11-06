@@ -29,7 +29,7 @@ public class DevelopmentScaleSurveyResponse {
 
         final List<DevelopmentScaleResponse> scalesResponse = surveyResults.stream()
                 .map(surveyResult -> DevelopmentScaleResponse.of(
-                        surveyResult.getDevelopmentType().toString(),
+                        surveyResult.getDevelopmentType().getType(),
                         surveyResult.getScore(),
                         surveyResult.getIsRisk()
                 ))

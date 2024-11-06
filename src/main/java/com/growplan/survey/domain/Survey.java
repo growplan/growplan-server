@@ -3,7 +3,6 @@ package com.growplan.survey.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,10 @@ public class Survey {
     private Long id;
 
     @Column(nullable = false)
-    private Double validAge;
+    private Double minAge;
+
+    @Column(nullable = false)
+    private Double maxAge;
 
     @Column(nullable = false)
     private String script;
