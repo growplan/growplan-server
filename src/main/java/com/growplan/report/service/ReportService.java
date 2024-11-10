@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
 @Service
 @Transactional
@@ -27,7 +27,7 @@ public class ReportService {
 
     public ReportListResponse getReports(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final LocalDate currentDate = LocalDate.now();
         final LocalDate targetDate = getTargetDate(currentDate);
