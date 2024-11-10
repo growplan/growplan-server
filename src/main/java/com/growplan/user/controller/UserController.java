@@ -6,6 +6,7 @@ import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
 import com.growplan.user.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "User-Controller", description = "사용자 API 엔드포인트")
 @RequestMapping("/users")
 public class UserController {
 

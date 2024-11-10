@@ -2,6 +2,7 @@ package com.growplan.report.controller;
 
 import com.growplan.report.dto.response.ReportListResponse;
 import com.growplan.report.service.ReportService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Report-Controller", description = "레포트 API 엔드포인트")
 @RequestMapping("/users/{userId}/children/{childId}/reports")
 public class ReportController {
 

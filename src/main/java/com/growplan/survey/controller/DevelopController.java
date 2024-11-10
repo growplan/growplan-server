@@ -3,6 +3,7 @@ package com.growplan.survey.controller;
 import com.growplan.survey.dto.response.DevelopmentResultResponse;
 import com.growplan.survey.dto.response.DevelopmentScaleSurveyResponse;
 import com.growplan.survey.service.DevelopService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Develop-Controller", description = "발달 API 엔드포인트")
 @RequestMapping("/users/{userId}/children/{childId}/developments")
 public class DevelopController {
 

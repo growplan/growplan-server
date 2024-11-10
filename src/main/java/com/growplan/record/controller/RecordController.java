@@ -4,6 +4,7 @@ import com.growplan.record.dto.request.RecordRequest;
 import com.growplan.record.dto.response.RecordDetailResponse;
 import com.growplan.record.dto.response.RecordListResponse;
 import com.growplan.record.service.RecordService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Record-Controller", description = "기록 API 엔드포인트")
 @RequestMapping("/users/{userId}/children/{childId}/records")
 public class RecordController {
 

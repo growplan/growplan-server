@@ -4,6 +4,7 @@ import com.growplan.child.dto.request.ChildRequest;
 import com.growplan.child.dto.response.ChildListResponse;
 import com.growplan.child.dto.response.ChildResponse;
 import com.growplan.child.service.ChildService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Child-Controller", description = "아이 API 엔드포인트")
 @RequestMapping("/users/{userId}/children")
 public class ChildController {
 

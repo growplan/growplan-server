@@ -5,6 +5,7 @@ import com.growplan.survey.dto.request.ChildSurveyUpdateRequest;
 import com.growplan.survey.dto.response.SurveyDetailListResponse;
 import com.growplan.survey.dto.response.SurveyListResponse;
 import com.growplan.survey.service.SurveyService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Survey-Controller", description = "설문 API 엔드포인트")
 @RequestMapping("/users/{userId}/children/{childId}/surveys")
 public class SurveyController {
 
