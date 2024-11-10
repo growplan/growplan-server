@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_CHILD_SURVEY;
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
+import static com.growplan.common.code.ExceptionCode.CHILD_SURVEY_NOT_FOUND;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
 @Service
 @Transactional
@@ -37,7 +37,7 @@ public class SurveyService {
     @Transactional(readOnly = true)
     public SurveyListResponse getChildSurveys(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
         final LocalDate currentDate = LocalDate.now();
@@ -53,7 +53,7 @@ public class SurveyService {
     @Transactional(readOnly = true)
     public SurveyDetailListResponse getSurveyDetail(final Long userId, final Long childId, final String developmentType) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
 
@@ -70,7 +70,7 @@ public class SurveyService {
 
     public void saveChildSurvey(final Long userId, final Long childId, final List<ChildSurveyRequest> childSurveyRequests) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final List<Long> surveyIds = getSurveyIds(childSurveyRequests);
 
@@ -103,7 +103,7 @@ public class SurveyService {
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
         final ChildSurvey childSurvey = childSurveyRepository.findById(surveyId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_CHILD_SURVEY));
+                .orElseThrow(() -> new BadRequestException(CHILD_SURVEY_NOT_FOUND));
 
         childSurvey.updateChildSurvey(childSurveyUpdateRequest.getStatus());
 

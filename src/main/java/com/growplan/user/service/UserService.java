@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER;
+import static com.growplan.common.code.ExceptionCode.USER_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +28,7 @@ public class UserService {
 
     public UserResponse getUser(final Long userId) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
 
         return UserResponse.of(user);
     }
@@ -62,7 +62,7 @@ public class UserService {
 
     public void updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
 
         user.updateUser(
                 userUpdateRequest.getName(),
@@ -76,7 +76,7 @@ public class UserService {
 
     public void deleteAccount(final Long userId) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
 
         userRepository.deleteById(user.getId());
     }

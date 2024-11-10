@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER;
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
+import static com.growplan.common.code.ExceptionCode.USER_NOT_FOUND;
 
 @Service
 @Transactional
@@ -28,7 +28,7 @@ public class ChildService {
 
     public ChildResponse getChild(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         return ChildResponse.of(userChild);
     }
@@ -41,7 +41,7 @@ public class ChildService {
 
     public void saveChild(final Long userId, final ChildRequest childRequest) {
         final User user = userRepository.findById(userId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER));
+                .orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
 
         final UserChild userChild = new UserChild(
                 childRequest.getName(),
@@ -59,7 +59,7 @@ public class ChildService {
 
     public void updateChild(final Long userId, final Long childId, final ChildRequest childRequest) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         userChild.updateUserChild(
                 childRequest.getName(),
@@ -76,7 +76,7 @@ public class ChildService {
 
     public void deleteChild(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         childRepository.delete(userChild);
     }

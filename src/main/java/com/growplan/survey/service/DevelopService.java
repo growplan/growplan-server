@@ -20,8 +20,8 @@ import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_CHILD_SURVEY;
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
+import static com.growplan.common.code.ExceptionCode.CHILD_SURVEY_NOT_FOUND;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
 @Service
 @Transactional
@@ -35,7 +35,7 @@ public class DevelopService {
 
     public DevelopmentScaleSurveyResponse getDevelopmentScalesAndSurveys(final Long userId, final Long childId) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final Double validAge = calculateAge(userChild.getBirthdate());
         final Integer months = calculateAgeInMonths(userChild.getBirthdate());
@@ -49,7 +49,7 @@ public class DevelopService {
 
     public DevelopmentResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final LocalDate currentDate = LocalDate.now();
 
@@ -69,7 +69,7 @@ public class DevelopService {
     private List<ChildSurvey> getSurveys(final UserChild userChild, final LocalDate date, final String developmentType) {
         List<ChildSurvey> surveys = childSurveyRepository.findByChildIdAndDevelopmentType(date, developmentType, userChild.getId());
         if (surveys.isEmpty()) {
-            throw new BadRequestException(NOT_FOUND_CHILD_SURVEY);
+            throw new BadRequestException(CHILD_SURVEY_NOT_FOUND);
         }
         return surveys;
     }

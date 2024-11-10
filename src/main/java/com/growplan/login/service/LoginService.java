@@ -47,7 +47,7 @@ public class LoginService {
 
     public LoginResponse login(final LoginRequest loginRequest) {
         final UserSign userSign = userSignRepository.findByUsername(loginRequest.getUsername())
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USERNAME));
+                .orElseThrow(() -> new BadRequestException(USERNAME_NOT_FOUND));
 
         if (!userSign.getPassword().equals(loginRequest.getPassword())) {
             throw new BadRequestException(INCORRECT_PASSWORD);

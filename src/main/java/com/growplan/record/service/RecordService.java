@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_RECORD;
-import static com.growplan.common.code.ExceptionCode.NOT_FOUND_USER_CHILD;
+import static com.growplan.common.code.ExceptionCode.RECORD_NOT_FOUND;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
 @Service
 @Transactional
@@ -40,7 +40,7 @@ public class RecordService {
 
     public RecordDetailResponse getRecord(final Long userId, final Long childId, final Long recordId) {
         final ChildRecord record = recordRepository.findById(recordId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_RECORD));
+                .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
         return RecordDetailResponse.of(record);
     }
@@ -48,7 +48,7 @@ public class RecordService {
     public void saveRecord(final Long userId, final Long childId, final RecordRequest recordRequest) {
         // TODO 사진 저장 로직 필요
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_USER_CHILD));
+                .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild);
         final ChildRecord savedRecord = recordRepository.save(record);
@@ -58,7 +58,7 @@ public class RecordService {
 
     public void updateRecord(final Long userId, final Long childId, final Long recordId, final RecordRequest recordRequest) {
         final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_RECORD));
+                .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
         recordRepository.delete(childRecord);
 
@@ -81,7 +81,7 @@ public class RecordService {
 
     public void deleteRecord(final Long userId, final Long childId, final Long recordId) {
         final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
-                .orElseThrow(() -> new BadRequestException(NOT_FOUND_RECORD));
+                .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
         recordRepository.delete(childRecord);
     }
