@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.growplan.common.exception.ImageException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,14 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.growplan.common.code.ExceptionCode.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class BucketService {
+public class ImageService {
 
     private final AmazonS3Client amazonS3Client;
 
@@ -76,9 +80,11 @@ public class BucketService {
 
     public void deleteFileFromS3(final String fileUrl) {
         try {
-            final String splitStr = ".com/";
+            final String splitStr = bucket + "/";
             final String fileName = fileUrl.substring(fileUrl.lastIndexOf(splitStr) + splitStr.length());
-            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
+            final String decodedFileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
+            log.info(decodedFileName);
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFileName));
         } catch (AmazonServiceException e) {
             throw new ImageException(FILE_DELETE_FAILED);
         }
