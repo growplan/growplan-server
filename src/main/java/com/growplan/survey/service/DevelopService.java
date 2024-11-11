@@ -4,6 +4,7 @@ import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.survey.domain.ChildSurvey;
+import com.growplan.survey.domain.Feedback;
 import com.growplan.survey.domain.SurveyGroup;
 import com.growplan.survey.domain.SurveyResult;
 import com.growplan.survey.domain.repository.ChildSurveyRepository;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.growplan.common.code.ExceptionCode.CHILD_SURVEY_NOT_FOUND;
 import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
@@ -59,11 +61,11 @@ public class DevelopService {
         final Boolean isRisk = calculateRisk(developmentScore);
 
         final SurveyResult surveyResult = getOrCreateSurveyResult(userChild, developmentType, currentDate, developmentScore, isRisk, surveys);
+        final List<Feedback> feedbacks = getFeedbacks(surveys, developmentScore);
 
         updateSurveyScore(surveyResult, developmentScore, isRisk);
 
-        // TODO 점수별 Script 추가 -> DB 반영 필요
-        return DevelopmentResultResponse.of(surveys, developmentScore);
+        return DevelopmentResultResponse.of(surveys, developmentScore, feedbacks);
     }
 
     private List<ChildSurvey> getSurveys(final UserChild userChild, final LocalDate date, final String developmentType) {
@@ -99,6 +101,15 @@ public class DevelopService {
 
     private Boolean calculateRisk(final Integer developmentScore) {
         return developmentScore <= 6;
+    }
+
+    private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore) {
+        return surveys.stream()
+                .map(survey -> survey.getSurvey().getSurveyGroup())
+                .distinct()
+                .flatMap(surveyGroup -> surveyGroup.getFeedbacks().stream())
+                .filter(feedback -> feedback.getRange() > developmentScore)
+                .collect(Collectors.toList());
     }
 
     private SurveyResult getOrCreateSurveyResult(final UserChild userChild, final String developmentType, final LocalDate currentDate, final Integer developmentScore, final Boolean isRisk, final List<ChildSurvey> surveys) {

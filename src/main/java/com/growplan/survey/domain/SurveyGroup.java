@@ -29,4 +29,7 @@ public class SurveyGroup {
 
     @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Survey> surveys = new ArrayList<>();
+
+    @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Feedback> feedbacks = new ArrayList<>();
 }

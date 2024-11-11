@@ -21,8 +21,10 @@ public interface ChildSurveyRepository extends JpaRepository<ChildSurvey, Long> 
     @Query("""
             SELECT cs FROM ChildSurvey cs
             LEFT JOIN FETCH cs.survey s
-            LEFT JOIN FETCH s.surveyGroup.developmentType d
-            WHERE cs.userChild.id = :childId AND DATE(cs.updatedAt) = :currentDate AND d.type = :developmentType
+            LEFT JOIN FETCH s.surveyGroup sg
+            LEFT JOIN FETCH sg.developmentType t
+            LEFT JOIN FETCH sg.feedbacks f
+            WHERE cs.userChild.id = :childId AND DATE(cs.updatedAt) = :currentDate AND t.type = :developmentType
             """)
     List<ChildSurvey> findByChildIdAndDevelopmentType(
             @Param("currentDate") final LocalDate date,
