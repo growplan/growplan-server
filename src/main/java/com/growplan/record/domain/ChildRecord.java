@@ -2,13 +2,14 @@ package com.growplan.record.domain;
 
 import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
+import com.growplan.image.domain.Image;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -32,7 +33,10 @@ public class ChildRecord extends BaseEntity {
     private UserChild userChild;
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<ChildRecordTag> recordTags = new ArrayList<>();
+    private Set<ChildRecordTag> recordTags = new HashSet<>();
+
+    @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<Image> images = new HashSet<>();
 
     public ChildRecord(final String script, final UserChild userChild) {
         this.script = script;
