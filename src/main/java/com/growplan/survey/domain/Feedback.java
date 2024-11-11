@@ -24,9 +24,12 @@ public class Feedback {
     private String content;
 
     @Column(nullable = false)
-    private Integer range;
+    private Integer minRange;
 
-    @ManyToOne(fetch = LAZY)
+    @Column(nullable = false)
+    private Integer maxRange;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_group_id", nullable = false)
     private SurveyGroup surveyGroup;
 }

@@ -13,6 +13,7 @@ import com.growplan.survey.domain.repository.SurveyResultRepository;
 import com.growplan.survey.dto.response.DevelopmentResultResponse;
 import com.growplan.survey.dto.response.DevelopmentScaleSurveyResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 import static com.growplan.common.code.ExceptionCode.CHILD_SURVEY_NOT_FOUND;
 import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -106,9 +108,9 @@ public class DevelopService {
     private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore) {
         return surveys.stream()
                 .map(survey -> survey.getSurvey().getSurveyGroup())
-                .distinct()
                 .flatMap(surveyGroup -> surveyGroup.getFeedbacks().stream())
-                .filter(feedback -> feedback.getRange() > developmentScore)
+                .filter(feedback -> feedback.getMinRange() <= developmentScore && developmentScore < feedback.getMaxRange())
+                .distinct()
                 .collect(Collectors.toList());
     }
 
