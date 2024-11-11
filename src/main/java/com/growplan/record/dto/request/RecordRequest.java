@@ -18,8 +18,6 @@ public class RecordRequest {
     @NotEmpty(message = "발달 영역을 하나 이상 선택해주세요.")
     private List<String> developmentTypes;
 
-    private List<MultipartFile> images;
-
     @NotBlank(message = "발달 관련 설명을 입력해주세요.")
     private String script;
 }
