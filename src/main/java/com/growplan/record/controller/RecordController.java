@@ -1,14 +1,17 @@
 package com.growplan.record.controller;
 
 import com.growplan.record.dto.request.RecordRequest;
-import com.growplan.record.dto.response.RecordDetailResponse;
 import com.growplan.record.dto.response.RecordListResponse;
+import com.growplan.record.dto.response.RecordResponse;
 import com.growplan.record.service.RecordService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,12 +31,12 @@ public class RecordController {
     }
 
     @GetMapping("/{recordId}")
-    public ResponseEntity<RecordDetailResponse> getRecord(
+    public ResponseEntity<RecordResponse> getRecord(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @PathVariable("recordId") final Long recordId
     ) {
-        final RecordDetailResponse response = recordService.getRecord(userId, childId, recordId);
+        final RecordResponse response = recordService.getRecord(userId, childId, recordId);
         return ResponseEntity.ok().body(response);
     }
 
@@ -41,9 +44,10 @@ public class RecordController {
     public ResponseEntity<Void> saveRecord(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
-            @RequestBody @Valid final RecordRequest recordRequest
+            @RequestPart("requestDto") @Valid final RecordRequest recordRequest,
+            @RequestPart("files") List<MultipartFile> files
     ) {
-        recordService.saveRecord(userId, childId, recordRequest);
+        recordService.saveRecord(userId, childId, recordRequest, files);
         return ResponseEntity.noContent().build();
     }
 
@@ -52,9 +56,10 @@ public class RecordController {
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @PathVariable("recordId") final Long recordId,
-            @RequestBody @Valid final RecordRequest recordRequest
+            @RequestPart("requestDto") @Valid final RecordRequest recordRequest,
+            @RequestPart("files") List<MultipartFile> files
     ) {
-        recordService.updateRecord(userId, childId, recordId, recordRequest);
+        recordService.updateRecord(userId, childId, recordId, recordRequest, files);
         return ResponseEntity.noContent().build();
     }
 

@@ -15,17 +15,23 @@ public class RecordResponse {
     private final String script;
     private final LocalDate recordedDate;
     private final List<String> developmentTypes;
+    private final List<String> imageUrls;
 
     public static final RecordResponse of(final ChildRecord record) {
         final List<String> developmentTypes = record.getRecordTags().stream()
                 .map(recordTag -> recordTag.getDevelopmentType().getType())
                 .toList();
 
+        final List<String> imageUrls = record.getImages().stream()
+                .map(image -> image.getImageUrl())
+                .toList();
+
         return new RecordResponse(
                 record.getId(),
                 record.getScript(),
                 record.getCreatedAt().toLocalDate(),
-                developmentTypes
+                developmentTypes,
+                imageUrls
         );
     }
 }
