@@ -24,9 +24,13 @@ public class RecordController {
     @GetMapping
     public ResponseEntity<RecordListResponse> getRecords(
             @PathVariable("userId") final Long userId,
-            @PathVariable("childId") final Long childId
+            @PathVariable("childId") final Long childId,
+            @RequestParam(value = "sort", defaultValue = "desc") final String sort,
+            @RequestParam(value = "startDate", required = false) final String startDate,
+            @RequestParam(value = "endDate", required = false) final String endDate,
+            @RequestParam(value = "developmentType", required = false) final String developmentType
     ) {
-        final RecordListResponse response = recordService.getRecords(userId, childId);
+        final RecordListResponse response = recordService.getRecords(userId, childId, sort, startDate, endDate, developmentType);
         return ResponseEntity.ok().body(response);
     }
 

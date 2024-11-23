@@ -28,11 +28,11 @@ public class ReportController {
         return ResponseEntity.ok().body(reportListResponse);
     }
 
-    @GetMapping("/developmentType")
+    @GetMapping("/{developmentType}")
     public ResponseEntity<SummaryResponse> getSummary(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
-            @PathVariable("userId") final String developmentType
+            @PathVariable("developmentType") final String developmentType
     ) {
         final SummaryResponse summaryResponse = reportService.getSummary(userId, childId, developmentType);
         return ResponseEntity.ok().body(summaryResponse);

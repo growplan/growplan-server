@@ -21,7 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,10 +42,48 @@ public class RecordService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    public RecordListResponse getRecords(final Long userId, final Long childId) {
-        final List<ChildRecord> record = recordRepository.findRecordsByUserIdAndChildId(userId, childId);
+    public RecordListResponse getRecords(final Long userId, final Long childId, final String sort, final String startDate, final String endDate, final String developmentType) {
+        List<ChildRecord> records = recordRepository.findRecordsByUserIdAndChildId(userId, childId);
 
-        return RecordListResponse.of(record);
+        records = filterByDevelopmentType(records, developmentType);
+        records = filterByDateRange(records, startDate, endDate);
+        records = sortRecords(records, sort);
+        
+        return RecordListResponse.of(records);
+    }
+
+    private List<ChildRecord> filterByDevelopmentType(List<ChildRecord> records, String developmentType) {
+        if (developmentType == null || developmentType.isEmpty()) {
+            return records;
+        }
+        return records.stream()
+                .filter(record -> record.getRecordTags() != null && record.getRecordTags().contains(developmentType))
+                .collect(Collectors.toList());
+    }
+
+    private List<ChildRecord> filterByDateRange(List<ChildRecord> records, String startDate, String endDate) {
+        if (startDate == null || endDate == null) {
+            return records;
+        }
+
+        final LocalDate start = LocalDate.parse(startDate);
+        final LocalDate end = LocalDate.parse(endDate);
+
+        return records.stream()
+                .filter(record -> {
+                    final LocalDateTime createdAt = record.getCreatedAt();
+                    return !createdAt.isBefore(start.atStartOfDay()) && !createdAt.isAfter(end.atTime(23, 59, 59));
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<ChildRecord> sortRecords(List<ChildRecord> records, String sort) {
+        if ("asc".equalsIgnoreCase(sort)) {
+            records.sort(Comparator.comparing(ChildRecord::getCreatedAt));
+        } else {
+            records.sort(Comparator.comparing(ChildRecord::getCreatedAt).reversed());
+        }
+        return records;
     }
 
     public RecordResponse getRecord(final Long userId, final Long childId, final Long recordId) {
