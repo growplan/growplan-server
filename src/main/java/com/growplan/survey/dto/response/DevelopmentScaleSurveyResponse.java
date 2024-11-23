@@ -25,7 +25,7 @@ public class DevelopmentScaleSurveyResponse {
             final List<SurveyResult> surveyResults,
             final List<SurveyGroup> surveyGroups
     ) {
-        final LocalDate surveyDate = surveyResults.isEmpty() ? null : surveyResults.get(0).getUpdatedAt().toLocalDate();
+        final LocalDate surveyDate = surveyResults.isEmpty() ? null : surveyResults.get(0).getCreatedAt().toLocalDate();
 
         final List<DevelopmentScaleResponse> scalesResponse = surveyResults.stream()
                 .map(surveyResult -> DevelopmentScaleResponse.of(
