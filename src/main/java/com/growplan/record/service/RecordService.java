@@ -46,9 +46,9 @@ public class RecordService {
         List<ChildRecord> records = recordRepository.findRecordsByUserIdAndChildId(userId, childId);
 
         records = filterByDevelopmentType(records, developmentType);
-        records = filterByDateRange(records, startDate, endDate);
+        records = filterByDate(records, startDate, endDate);
         records = sortRecords(records, sort);
-        
+
         return RecordListResponse.of(records);
     }
 
@@ -56,13 +56,16 @@ public class RecordService {
         if (developmentType == null || developmentType.isEmpty()) {
             return records;
         }
+
         return records.stream()
-                .filter(record -> record.getRecordTags() != null && record.getRecordTags().contains(developmentType))
+                .filter(record -> record.getRecordTags() != null &&
+                        record.getRecordTags().stream()
+                                .anyMatch(tag -> tag.getDevelopmentType().getType().equals(developmentType)))
                 .collect(Collectors.toList());
     }
 
-    private List<ChildRecord> filterByDateRange(List<ChildRecord> records, String startDate, String endDate) {
-        if (startDate == null || endDate == null) {
+    private List<ChildRecord> filterByDate(final List<ChildRecord> records, final String startDate, final String endDate) {
+        if ((startDate == null || startDate.isEmpty()) && (endDate == null || endDate.isEmpty())) {
             return records;
         }
 

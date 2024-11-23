@@ -15,6 +15,7 @@ public interface RecordRepository extends JpaRepository<ChildRecord, Long> {
             FROM ChildRecord cr
             LEFT JOIN FETCH cr.userChild uc
             LEFT JOIN FETCH cr.recordTags rt
+            LEFT JOIN FETCH rt.developmentType d
             LEFT JOIN FETCH cr.images i
             WHERE cr.userChild.user.id = :userId AND cr.userChild.id = :childId
             """)
