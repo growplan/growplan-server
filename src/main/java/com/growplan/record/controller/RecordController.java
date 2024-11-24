@@ -31,7 +31,7 @@ public class RecordController {
     @Parameter(name = "sort", description = "정렬 기준 (asc: 오름차순, desc: 내림차순)", example = "desc")
     @Parameter(name = "startDate", description = "조회 시작일 (YYYY-MM-DD 형식)", example = "2023-01-01")
     @Parameter(name = "endDate", description = "조회 종료일 (YYYY-MM-DD 형식)", example = "2023-12-31")
-    @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH)", example = "GM")
+    @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH)", required = true, example = "GM")
     @GetMapping
     public ResponseEntity<RecordListResponse> getRecords(
             @PathVariable("userId") final Long userId,
@@ -39,7 +39,7 @@ public class RecordController {
             @RequestParam(value = "sort", defaultValue = "desc") final String sort,
             @RequestParam(value = "startDate", required = false) final String startDate,
             @RequestParam(value = "endDate", required = false) final String endDate,
-            @RequestParam(value = "developmentType", required = false) final String developmentType
+            @RequestParam(value = "developmentType") final String developmentType
     ) {
         final RecordListResponse response = recordService.getRecords(userId, childId, sort, startDate, endDate, developmentType);
         return ResponseEntity.ok().body(response);
