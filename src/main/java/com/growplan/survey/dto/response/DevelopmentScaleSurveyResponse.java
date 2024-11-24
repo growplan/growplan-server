@@ -3,6 +3,7 @@ package com.growplan.survey.dto.response;
 import com.growplan.child.domain.UserChild;
 import com.growplan.survey.domain.SurveyGroup;
 import com.growplan.survey.domain.SurveyResult;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -13,9 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DevelopmentScaleSurveyResponse {
 
+    @Schema(description = "아이 이름", example = "홍길동")
     private final String name;
+
+    @Schema(description = "아이 개월 수", example = "24")
     private final Integer months;
+
+    @Schema(description = "설문 날짜 (YYYY-MM-DD 형식)", example = "2024-11-01")
     private final LocalDate surveyDate;
+
     private final List<DevelopmentScaleResponse> developments;
     private final List<SurveyTitleResponse> surveyTitles;
 
