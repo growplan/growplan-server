@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DevelopmentScaleResponse {
 
-    @Schema(description = "발달 영역 유형", example = "GM", allowableValues = {"GM", "LM", "CG", "LG", "SC", "SH"})
+    @Schema(description = "발달 영역", example = "GM", allowableValues = {"GM", "LM", "CG", "LG", "SC", "SH"})
     private final String developmentType;
 
     @Schema(description = "발달 점수", example = "85")

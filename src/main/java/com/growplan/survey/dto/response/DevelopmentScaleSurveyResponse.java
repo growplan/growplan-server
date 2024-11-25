@@ -20,6 +20,9 @@ public class DevelopmentScaleSurveyResponse {
     @Schema(description = "아이 개월 수", example = "24")
     private final Integer months;
 
+    @Schema(description = "아이 생년월일 (YYYY-MM-DD 형식)", example = "2012-08-08")
+    private final String birthdate;
+
     @Schema(description = "설문 날짜 (YYYY-MM-DD 형식)", example = "2024-11-01")
     private final LocalDate surveyDate;
 
@@ -53,6 +56,7 @@ public class DevelopmentScaleSurveyResponse {
         return new DevelopmentScaleSurveyResponse(
                 userChild.getName(),
                 months,
+                userChild.getBirthdate(),
                 surveyDate,
                 scalesResponse,
                 titleResponses

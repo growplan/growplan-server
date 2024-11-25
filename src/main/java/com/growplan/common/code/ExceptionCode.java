@@ -29,6 +29,8 @@ public enum ExceptionCode {
     FILE_CONVERSION_IO_EXCEPTION(5004, "파일 변환 중 IO 예외가 발생하였습니다."),
     EXCEEDED_MAX_IMAGE_UPLOAD(5005, "최대 5개까지 이미지 업로드가 가능합니다."),
 
+    DEVELOPMENT_TYPE_NOT_FOUND(6001, "요청에 해당하는 발달 영역을 찾을 수 없습니다."),
+
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;

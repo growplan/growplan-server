@@ -21,10 +21,10 @@ public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long
 
     @Query("""
             SELECT sr FROM SurveyResult sr
-            WHERE DATE(sr.updatedAt) = :currentDate AND sr.developmentType.type = :developmentType
+            WHERE DATE(sr.updatedAt) = :date AND sr.developmentType.type = :developmentType
             """)
     Optional<SurveyResult> findByDateAndDevelopmentType(
-            @Param("currentDate") final LocalDate date,
+            @Param("date") final LocalDate date,
             @Param("developmentType") final String developmentType
     );
 
