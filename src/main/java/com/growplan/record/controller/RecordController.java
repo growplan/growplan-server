@@ -45,8 +45,8 @@ public class RecordController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "발달 일지 조회", description = "발달 일지를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "발달 일지 조회에 성공했습니다.")
+    @Operation(summary = "발달 일지 단일 조회", description = "발달 일지를 단일 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "발달 일지 단일 조회에 성공했습니다.")
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @Parameter(name = "recordId", description = "기록 아이디", required = true, example = "1")
