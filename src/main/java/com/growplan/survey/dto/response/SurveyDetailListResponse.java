@@ -23,7 +23,7 @@ public class SurveyDetailListResponse {
 
     public static SurveyDetailListResponse fromChildSurveys(final List<ChildSurvey> childSurveys) {
         final List<SurveyDetailResponse> surveyResponses = childSurveys.stream()
-                .map(childSurvey -> SurveyDetailResponse.of(childSurvey.getSurvey())) // ChildSurvey에서 Survey를 가져오는 메서드 호출
+                .map(childSurvey -> SurveyDetailResponse.of(childSurvey))
                 .toList();
 
         return new SurveyDetailListResponse(surveyResponses);

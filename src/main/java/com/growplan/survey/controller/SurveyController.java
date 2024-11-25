@@ -35,8 +35,8 @@ public class SurveyController {
         return ResponseEntity.ok().body(surveyListResponse);
     }
 
-    @Operation(summary = "아이 설문 전체 조회", description = "아이 설문을 전체 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "아이 설문 전체 조회에 성공했습니다.")
+    @Operation(summary = "아이 설문 상세 조회", description = "아이 설문을 상세 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "아이 설문 상세 조회에 성공했습니다.")
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH)", required = true, example = "GM")
@@ -50,8 +50,8 @@ public class SurveyController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "발달 척도와 설문 조회", description = "발달 척도와 설문을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "발달 척도와 설문 조회에 성공했습니다.")
+    @Operation(summary = "아이 설문 저장", description = "아이 설문을 저장합니다.")
+    @ApiResponse(responseCode = "204", description = "아이 설문 저장에 성공했습니다.")
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @PostMapping
@@ -64,10 +64,11 @@ public class SurveyController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "발달 척도와 설문 조회", description = "발달 척도와 설문을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "발달 척도와 설문 조회에 성공했습니다.")
+    @Operation(summary = "아이 설문 수정", description = "아이 설문을 수정합니다.")
+    @ApiResponse(responseCode = "204", description = "아이 설문 수정에 성공했습니다.")
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
+    @Parameter(name = "surveyId", description = "설문 아이디", required = true, example = "1")
     @PatchMapping("/{surveyId}")
     public ResponseEntity<Void> updateChildSurvey(
             @PathVariable("userId") final Long userId,

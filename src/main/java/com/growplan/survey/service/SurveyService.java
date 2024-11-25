@@ -39,10 +39,10 @@ public class SurveyService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        final Double validAge = calculateAge(userChild.getBirthdate());
+        final Double childAge = calculateAge(userChild.getBirthdate());
         final LocalDate currentDate = LocalDate.now();
 
-        final List<ChildSurvey> childSurveys = childSurveyRepository.findByValidAge(validAge, currentDate);
+        final List<ChildSurvey> childSurveys = childSurveyRepository.findByChildAge(childAge, currentDate);
 
         final Map<String, List<ChildSurvey>> groupedChildSurveys = childSurveys.stream()
                 .collect(Collectors.groupingBy(childSurvey -> childSurvey.getSurvey().getSurveyGroup().getTitle()));
@@ -55,13 +55,13 @@ public class SurveyService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        final Double validAge = calculateAge(userChild.getBirthdate());
+        final Double childAge = calculateAge(userChild.getBirthdate());
 
         final LocalDate currentDate = LocalDate.now();
         final List<ChildSurvey> childSurveys = childSurveyRepository.findByChildIdAndDevelopmentType(currentDate, developmentType, childId);
 
         if (childSurveys.isEmpty()) {
-            final List<Survey> surveys = surveyRepository.findByValidAgeAndDevelopmentType(validAge, developmentType);
+            final List<Survey> surveys = surveyRepository.findByChildAgeAndDevelopmentType(childAge, developmentType);
             return SurveyDetailListResponse.fromSurveys(surveys);
         }
 

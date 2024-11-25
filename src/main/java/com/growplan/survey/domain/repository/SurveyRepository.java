@@ -14,7 +14,7 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
             LEFT JOIN FETCH s.surveyGroup sg
             WHERE s.minAge <= :childAge AND s.maxAge >= :childAge AND sg.developmentType.type = :developmentType
             """)
-    List<Survey> findByValidAgeAndDevelopmentType(@Param("childAge") final Double childAge, @Param("developmentType") final String developmentType);
+    List<Survey> findByChildAgeAndDevelopmentType(@Param("childAge") final Double childAge, @Param("developmentType") final String developmentType);
 
     List<Survey> findByIdIn(final List<Long> surveyIds);
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SurveyResponse {
 
-    @Schema(description = "설문 제목", example = "아이가 새로운 단어를 얼마나 자주 배우나요?")
+    @Schema(description = "설문 제목", example = "그려진 점선을 따라 그려요.")
     private final String title;
 
     private final List<SurveyDetailResponse> details;
