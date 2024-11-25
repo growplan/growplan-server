@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChildResponse {
 
+    @Schema(description = "아이 아이디", example = "1")
+    private final Long id;
+
     @Schema(description = "아이 이름", example = "김동동")
     private final String name;
 
@@ -32,6 +35,7 @@ public class ChildResponse {
 
     public static ChildResponse of(final UserChild userChild) {
         return new ChildResponse(
+                userChild.getId(),
                 userChild.getName(),
                 userChild.getBirthdate(),
                 userChild.getGender().getCode(),

@@ -1,6 +1,8 @@
 package com.growplan.child.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
@@ -38,5 +40,6 @@ public class ChildRequest {
     private Boolean isPremature;
 
     @Schema(description = "출생 당시 주수 (nullable 가능)", nullable = true, example = "40.0")
+    @DecimalMax(value = "37.0", inclusive = false, message = "주수는 37주 미만이어야 합니다.")
     private Double birthWeeks;
 }

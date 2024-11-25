@@ -27,12 +27,12 @@ public class UserUpdateRequest {
     private String birthdate;
 
     @NotBlank(message = "사용자 이메일을 입력해주세요.")
-    @Email(message = "올바른 이메일 형식이어야 합니다.")
+    @Email(message = "올바른 이메일 형식을 입력해주세요.")
     @Schema(description = "사용자 이메일 주소", example = "example@example.com")
     private String email;
 
     @NotBlank(message = "사용자 전화번호를 입력해주세요.")
-    @Pattern(regexp = "^\\d{11}$", message = "전화번호는 11자리의 숫자만 입력 가능합니다.")
+    @Pattern(regexp = "^\\d{11}$", message = "전화번호는 11자리 숫자만 입력 가능합니다.")
     @Schema(description = "사용자 전화번호 (11자리, 숫자만 입력)", example = "01012345678")
     private String number;
 }

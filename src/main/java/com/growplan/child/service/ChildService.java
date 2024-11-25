@@ -48,7 +48,7 @@ public class ChildService {
                 childRequest.getBirthdate(),
                 GenderType.of(childRequest.getGender()),
                 childRequest.getBornHeight(),
-                childRequest.getBornHeight(),
+                childRequest.getBornWeight(),
                 childRequest.getIsPremature(),
                 childRequest.getBirthWeeks(),
                 user
@@ -66,7 +66,7 @@ public class ChildService {
                 childRequest.getBirthdate(),
                 GenderType.of(childRequest.getGender()),
                 childRequest.getBornHeight(),
-                childRequest.getBornHeight(),
+                childRequest.getBornWeight(),
                 childRequest.getIsPremature(),
                 childRequest.getBirthWeeks()
         );
