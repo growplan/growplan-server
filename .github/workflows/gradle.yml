@@ -29,22 +29,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Ensure resources directory exists
+        run: mkdir -p ./src/main/resources
+
       - name: Make application.yml
-        if: |
-          contains(github.ref, 'main')
+        if: contains(github.ref, 'main')
         run: |
-          cd ./src/main/resources 
-          touch ./application.yml 
-          echo "${{ secrets.YML }}" > ./application.yml
+          touch ./src/main/resources/application.yml
+          echo "${{ secrets.YML }}" > ./src/main/resources/application.yml
         shell: bash
 
       - name: Make application-db.yml
-        if: |
-          contains(github.ref, 'main')
+        if: contains(github.ref, 'main')
         run: |
-          cd ./src/main/resources 
-          touch ./application-db.yml 
-          echo "${{ secrets.YML_DB }}" > ./application-db.yml
+          touch ./src/main/resources/application-db.yml
+          echo "${{ secrets.YML_DB }}" > ./src/main/resources/application-db.yml
         shell: bash
 
       - name: Grant execute permission for gradlew
