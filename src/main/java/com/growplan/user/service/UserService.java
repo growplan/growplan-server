@@ -24,7 +24,6 @@ import static com.growplan.common.code.ExceptionCode.USER_NOT_FOUND;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final UserSignRepository userSignRepository;
 
     public UserResponse getUser(final Long userId) {
         final User user = userRepository.findById(userId)
@@ -40,19 +39,13 @@ public class UserService {
     }
 
     public SignUpResponse signUp(final SignUpRequest signUpRequest) {
-        final UserSign userSign = new UserSign(
-                signUpRequest.getUsername(),
-                signUpRequest.getPassword()
-        );
-
-        final UserSign savedUserSign = userSignRepository.save(userSign);
-
         final User user = new User(
                 signUpRequest.getName(),
                 signUpRequest.getBirthdate(),
                 signUpRequest.getEmail(),
                 signUpRequest.getNumber(),
-                savedUserSign
+                null,
+                null
         );
 
         final User savedUser = userRepository.save(user);

@@ -4,6 +4,7 @@ import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
 import com.growplan.common.type.StatusType;
 import com.growplan.login.domain.UserSign;
+import com.growplan.login.domain.type.SocialLoginType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,17 +34,21 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String birthdate;
 
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String number;
+
+    @Column(nullable = false)
+    private String socialLoginId;
+
+    @Column(nullable = false)
+    @Enumerated(value = STRING)
+    private SocialLoginType socialLoginType;
 
     @Column(nullable = false)
     @Enumerated(value = STRING)
@@ -63,13 +68,26 @@ public class User extends BaseEntity {
             final String birthdate,
             final String email,
             final String number,
-            final UserSign userSign
+            final String socialLoginId,
+            final SocialLoginType socialLoginType
     ) {
         this.name = name;
         this.birthdate = birthdate;
         this.email = email;
         this.number = number;
-        this.userSign = userSign;
+        this.socialLoginId = socialLoginId;
+        this.socialLoginType = socialLoginType;
+        this.isValid = ACTIVE;
+    }
+
+    public User(
+            final String email,
+            final String socialLoginId,
+            final SocialLoginType socialLoginType
+    ) {
+        this.email = email;
+        this.socialLoginId = socialLoginId;
+        this.socialLoginType = socialLoginType;
         this.isValid = ACTIVE;
     }
 
