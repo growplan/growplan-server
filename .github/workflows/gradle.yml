@@ -79,12 +79,12 @@ jobs:
           aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          port: 22
           key: ${{ secrets.PRIVATE_KEY }}
+          port: 22
           script: |
             sudo docker ps
             sudo docker stop $(sudo docker ps -q)
