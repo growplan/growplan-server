@@ -17,14 +17,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignUpRequest {
 
-    @NotNull(message = "사용자 아이디를 입력해주세요.")
-    @Schema(description = "사용자 아이디", example = "user123")
-    private String username;
-
-    @NotNull(message = "사용자 비밀번호를 입력해주세요.")
-    @Schema(description = "사용자 비밀번호", example = "password123")
-    private String password;
-
     @NotBlank(message = "사용자 닉네임을 입력해주세요.")
     @Schema(description = "사용자 닉네임", example = "김보리")
     private String name;
