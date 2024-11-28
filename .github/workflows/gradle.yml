@@ -45,6 +45,13 @@ jobs:
           touch ./src/main/resources/application-db.yml
           echo "${{ secrets.YML_DB }}" > ./src/main/resources/application-db.yml
         shell: bash
+        
+      - name: Make application-oauth.yml
+        if: contains(github.ref, 'main')
+        run: |
+          touch ./src/main/resources/application-oauth.yml
+          echo "${{ secrets.YML_OAUTH }}" > ./src/main/resources/application-oauth.yml
+        shell: bash
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
