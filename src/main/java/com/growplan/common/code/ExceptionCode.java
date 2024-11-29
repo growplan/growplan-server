@@ -16,6 +16,7 @@ public enum ExceptionCode {
     USERNAME_NOT_FOUND(2006, "존재하지 않는 아이디입니다."),
     INCORRECT_PASSWORD(2007, "비밀번호가 일치하지 않습니다."),
     USER_NOT_FOUND(2008, "존재하지 않는 회원입니다."),
+    FAIL_TO_SOCIAL_LOGIN(2009, "소셜 로그인에 실패했습니다."),
 
     INVALID_GENDER_TYPE(3000, "유효하지 않은 성별 타입입니다."),
     USER_CHILD_NOT_FOUND(3001, "요청에 해당하는 자녀 정보를 찾을 수 없습니다."),
