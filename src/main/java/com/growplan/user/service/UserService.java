@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.growplan.common.code.ExceptionCode.USER_NOT_FOUND;
+import static com.growplan.login.domain.type.SocialLoginType.KAKAO;
 
 @Service
 @RequiredArgsConstructor
@@ -44,8 +45,8 @@ public class UserService {
                 signUpRequest.getBirthdate(),
                 signUpRequest.getEmail(),
                 signUpRequest.getNumber(),
-                null,
-                null
+                "0111",
+                KAKAO
         );
 
         final User savedUser = userRepository.save(user);
