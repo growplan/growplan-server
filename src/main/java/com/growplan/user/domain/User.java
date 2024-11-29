@@ -43,7 +43,7 @@ public class User extends BaseEntity {
 
     private String number;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String socialLoginId;
 
     @Column(nullable = false)
