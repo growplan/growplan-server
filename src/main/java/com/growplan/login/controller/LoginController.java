@@ -22,7 +22,7 @@ public class LoginController {
     @ApiResponse(responseCode = "200", description = "소셜 로그인에 성공했습니다.")
     @Parameter(name = "provider", description = "소셜 로그인 제공자 (kakao, naver)", required = true, example = "kakao")
     @Parameter(name = "code", description = "소셜 로그인 인가 코드", required = true, example = "C2tSMdxIQo...")
-    @PostMapping("/auth/login/{provider}")
+    @PostMapping("/sign-in/auth/{provider}")
     public ResponseEntity<LoginResponse> login(
             @PathVariable("provider") final String provider,
             @RequestParam("code") final String code
