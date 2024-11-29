@@ -15,7 +15,7 @@ public class ChildSurveyRequest {
     private Long id;
 
     @Min(1)
-    @Max(2)
+    @Max(4)
     @NotNull(message = "설문 점수를 입력해주세요.")
     private Integer status;
 }
