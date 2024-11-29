@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Child-Controller", description = "아이 API 엔드포인트")
-@RequestMapping("/users/{userId}/children")
+@RequestMapping("/users/{userId}/childs")
 public class ChildController {
 
     private final ChildService childService;
