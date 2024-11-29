@@ -15,7 +15,7 @@ public class LoginResponse {
     @Schema(description = "사용자 이메일", example = "1")
     private final String email;
 
-    @Schema(description = "사용자 소셜 로그인 타입", example = "1")
+    @Schema(description = "사용자 소셜 로그인 타입", example = "")
     private final String socialLoginType;
 
     @Schema(description = "사용자 추가 회원가입 유무", example = "true")
