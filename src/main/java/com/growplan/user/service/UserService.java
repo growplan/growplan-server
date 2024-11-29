@@ -3,9 +3,7 @@ package com.growplan.user.service;
 import com.growplan.common.exception.BadRequestException;
 import com.growplan.user.domain.User;
 import com.growplan.user.domain.repository.UserRepository;
-import com.growplan.user.dto.request.SignUpRequest;
 import com.growplan.user.dto.request.UserUpdateRequest;
-import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.growplan.common.code.ExceptionCode.USER_NOT_FOUND;
-import static com.growplan.login.domain.type.SocialLoginType.KAKAO;
 
 @Service
 @RequiredArgsConstructor
@@ -35,21 +32,6 @@ public class UserService {
         final List<User> users = userRepository.findAll();
 
         return UserListResponse.of(users);
-    }
-
-    public SignUpResponse signUp(final SignUpRequest signUpRequest) {
-        final User user = new User(
-                signUpRequest.getName(),
-                signUpRequest.getBirthdate(),
-                signUpRequest.getEmail(),
-                signUpRequest.getNumber(),
-                "0111",
-                KAKAO
-        );
-
-        final User savedUser = userRepository.save(user);
-
-        return SignUpResponse.of(savedUser);
     }
 
     public void updateUser(final Long userId, final UserUpdateRequest userUpdateRequest) {

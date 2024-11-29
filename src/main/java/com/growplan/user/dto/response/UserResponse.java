@@ -24,6 +24,9 @@ public class UserResponse {
     @Schema(description = "사용자 전화번호", example = "01012345678")
     private final String number;
 
+    @Schema(description = "사용자 소셜 로그인 타입 (kakao, naver)", example = "kakao")
+    private final String socialLoginType;
+
     @Schema(description = "사용자 유효성 상태 (1: 유효, 0: 비유효)", example = "1")
     private final Integer isValid;
 
@@ -34,6 +37,7 @@ public class UserResponse {
                 user.getBirthdate(),
                 user.getEmail(),
                 user.getNumber(),
+                user.getSocialLoginType().getCode(),
                 user.getIsValid().getStatusCode()
         );
     }

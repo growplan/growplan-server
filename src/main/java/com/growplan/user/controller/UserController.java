@@ -1,7 +1,5 @@
 package com.growplan.user.controller;
 
-import com.growplan.user.dto.request.SignUpRequest;
-import com.growplan.user.dto.response.SignUpResponse;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
@@ -29,14 +27,6 @@ public class UserController {
     public ResponseEntity<UserListResponse> getUsers() {
         final UserListResponse userListResponse = userService.getUsers();
         return ResponseEntity.ok().body(userListResponse);
-    }
-
-    @Operation(summary = "추가 정보 저장", description = "추가 정보를 저장합니다.")
-    @ApiResponse(responseCode = "200", description = "추가 정보 저장에 성공했습니다.")
-    @PostMapping
-    public ResponseEntity<SignUpResponse> signUp(@RequestBody @Valid final SignUpRequest signUpRequest) {
-        final SignUpResponse signUpResponse = userService.signUp(signUpRequest);
-        return ResponseEntity.ok().body(signUpResponse);
     }
 
     @Operation(summary = "유저 단일 조회", description = "유저를 단일 조회합니다.")
