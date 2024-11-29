@@ -12,10 +12,10 @@ public class LoginResponse {
     @Schema(description = "사용자 아이디", example = "1")
     private final Long id;
 
-    @Schema(description = "사용자 이메일", example = "1")
+    @Schema(description = "사용자 이메일", example = "example@example.com")
     private final String email;
 
-    @Schema(description = "사용자 소셜 로그인 타입", example = "")
+    @Schema(description = "사용자 소셜 로그인 타입 (kakao, naver)", example = "kakao")
     private final String socialLoginType;
 
     @Schema(description = "사용자 추가 회원가입 유무", example = "true")
