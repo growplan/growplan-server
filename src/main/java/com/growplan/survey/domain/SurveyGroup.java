@@ -27,6 +27,12 @@ public class SurveyGroup {
     @JoinColumn(name = "development_type_id", nullable = false)
     private DevelopmentType developmentType;
 
+    @Column(nullable = false)
+    private Integer minMonth;
+
+    @Column(nullable = false)
+    private Integer maxMonth;
+
     @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Survey> surveys = new ArrayList<>();
 

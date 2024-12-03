@@ -21,12 +21,6 @@ public class Survey {
     private Long id;
 
     @Column(nullable = false)
-    private Double minAge;
-
-    @Column(nullable = false)
-    private Double maxAge;
-
-    @Column(nullable = false)
     private String script;
 
     @Column(nullable = false)
