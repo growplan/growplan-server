@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -39,15 +38,13 @@ public class DevelopService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        // TODO 주수로 변경 가능
-        final Double childAge = calculateAge(userChild.getBirthdate());
-        final Integer months = calculateAgeInMonths(userChild.getBirthdate());
+        final Integer childMonths = calculateAgeInMonths(userChild.getBirthdate());
 
         final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId());
 
-        final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByValidAge(childAge);
+        final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByMonths(childMonths);
 
-        return DevelopmentScaleSurveyResponse.of(userChild, months, surveyResults, surveyGroups);
+        return DevelopmentScaleSurveyResponse.of(userChild, childMonths, surveyResults, surveyGroups);
     }
 
     public DevelopmentResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
@@ -130,21 +127,6 @@ public class DevelopService {
             surveyResult.updateSurveyResult(developmentScore, isRisk);
             surveyResultRepository.save(surveyResult);
         }
-    }
-
-    private Period getAgePeriod(final String birthdateStr) {
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final LocalDate birthdate = LocalDate.parse(birthdateStr, formatter);
-        final LocalDate today = LocalDate.now();
-        return Period.between(birthdate, today);
-    }
-
-    private Double calculateAge(final String birthdateStr) {
-        final Period period = getAgePeriod(birthdateStr);
-        final int years = period.getYears();
-        final int months = period.getMonths();
-
-        return years + (months / 100.0);
     }
 
     private int calculateAgeInMonths(final String birthdateStr) {

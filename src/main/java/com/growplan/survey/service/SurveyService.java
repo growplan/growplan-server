@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,10 +39,10 @@ public class SurveyService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        final Double childAge = calculateAge(userChild.getBirthdate());
+        final Integer childMonth = calculateAgeInMonths(userChild.getBirthdate());
         final LocalDate currentDate = LocalDate.now();
 
-        final List<ChildSurvey> childSurveys = childSurveyRepository.findByChildAge(childAge, currentDate);
+        final List<ChildSurvey> childSurveys = childSurveyRepository.findByMonths(childMonth, currentDate);
 
         final Map<String, List<ChildSurvey>> groupedChildSurveys = childSurveys.stream()
                 .collect(Collectors.groupingBy(childSurvey -> childSurvey.getSurvey().getSurveyGroup().getTitle()));
@@ -55,13 +55,13 @@ public class SurveyService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        final Double childAge = calculateAge(userChild.getBirthdate());
+        final Integer childMonths = calculateAgeInMonths(userChild.getBirthdate());
 
         final LocalDate currentDate = LocalDate.now();
         final List<ChildSurvey> childSurveys = childSurveyRepository.findByChildIdAndDevelopmentType(currentDate, developmentType, childId);
 
         if (childSurveys.isEmpty()) {
-            final List<Survey> surveys = surveyRepository.findByChildAgeAndDevelopmentType(childAge, developmentType);
+            final List<Survey> surveys = surveyRepository.findByMonthsAndDevelopmentType(childMonths, developmentType);
             return SurveyDetailListResponse.fromSurveys(surveys);
         }
 
@@ -110,15 +110,13 @@ public class SurveyService {
         childSurveyRepository.save(childSurvey);
     }
 
-    private Double calculateAge(final String birthdateStr) {
+    private int calculateAgeInMonths(final String birthdateStr) {
         final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         final LocalDate birthdate = LocalDate.parse(birthdateStr, formatter);
         final LocalDate today = LocalDate.now();
 
-        final Period period = Period.between(birthdate, today);
-        final int years = period.getYears();
-        final int months = period.getMonths();
+        final long totalDays = ChronoUnit.DAYS.between(birthdate, today);
 
-        return years + (months / 100.0);
+        return (int) (totalDays / 30);
     }
 }
