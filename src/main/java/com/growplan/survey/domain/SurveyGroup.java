@@ -33,6 +33,15 @@ public class SurveyGroup {
     @Column(nullable = false)
     private Integer maxMonth;
 
+    @Column(nullable = false)
+    private Integer lowScore;
+
+    @Column(nullable = false)
+    private Integer midScore;
+
+    @Column(nullable = false)
+    private Integer highScore;
+
     @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Survey> surveys = new ArrayList<>();
 

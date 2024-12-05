@@ -23,9 +23,6 @@ public class Survey {
     @Column(nullable = false)
     private String script;
 
-    @Column(nullable = false)
-    private Double weight;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "survey_group_id", nullable = false)
     private SurveyGroup surveyGroup;
