@@ -19,7 +19,7 @@ public class SurveyDetailResponse {
     @Schema(description = "설문 내용", example = "아이가 2~3단어로 문장을 만드나요?")
     private final String script;
 
-    @Schema(description = "설문 점수 (1~4)", example = "1")
+    @Schema(description = "설문 점수 (0~3)", example = "1")
     private final Integer status;
 
     public static SurveyDetailResponse of(final Survey survey) {

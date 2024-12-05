@@ -55,11 +55,14 @@ public class DevelopService {
 
         final List<ChildSurvey> surveys = getChildSurveys(userChild, currentDate, developmentType);
 
+        // TODO 효율적인 방법 필요
+        final SurveyGroup surveyGroup = surveys.isEmpty() ? null : surveys.get(0).getSurvey().getSurveyGroup();
+
         final Integer developmentScore = calculateDevelopmentScore(surveys);
-        final Boolean isRisk = calculateRisk(developmentScore);
+        final Boolean isRisk = calculateRisk(developmentScore, surveyGroup);
 
         final SurveyResult surveyResult = getOrCreateSurveyResult(userChild, developmentType, currentDate, developmentScore, isRisk, surveys);
-        final List<Feedback> feedbacks = getFeedbacks(surveys, developmentScore);
+        final List<Feedback> feedbacks = getFeedbacks(surveys, developmentScore, surveyGroup);
 
         updateSurveyScore(surveyResult, developmentScore, isRisk);
 
@@ -75,30 +78,19 @@ public class DevelopService {
     }
 
     private Integer calculateDevelopmentScore(final List<ChildSurvey> surveys) {
-        double totalWeight = 0.0;
-        double totalScore = 0.0;
-
-        for (final ChildSurvey survey : surveys) {
-            totalWeight += survey.getSurvey().getWeight();
-        }
-
-        for (final ChildSurvey survey : surveys) {
-            final Double weight = survey.getSurvey().getWeight();
-            final Integer status = survey.getStatus();
-
-            totalScore += (weight / totalWeight) * (status / 4.0);
-        }
-
-        final double developmentScore = totalScore * 24.0;
-        return (int) Math.round(developmentScore);
+        return surveys.stream()
+                .mapToInt(ChildSurvey::getStatus)
+                .sum();
     }
 
-    private Boolean calculateRisk(final Integer developmentScore) {
-        return developmentScore <= 6;
+    private Boolean calculateRisk(final Integer developmentScore, final SurveyGroup surveyGroup) {
+        return surveyGroup != null && developmentScore <= surveyGroup.getLowScore();
     }
 
-    private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore) {
-        final SurveyGroup surveyGroup = surveys.get(0).getSurvey().getSurveyGroup();
+    private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore, final SurveyGroup surveyGroup) {
+        if (surveyGroup == null) {
+            return List.of();
+        }
 
         return surveyGroup.getFeedbacks().stream()
                 .filter(feedback -> feedback.getMinRange() <= developmentScore && developmentScore < feedback.getMaxRange())
