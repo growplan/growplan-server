@@ -21,16 +21,10 @@ public class Survey {
     private Long id;
 
     @Column(nullable = false)
-    private Double minAge;
-
-    @Column(nullable = false)
-    private Double maxAge;
+    private String title;
 
     @Column(nullable = false)
     private String script;
-
-    @Column(nullable = false)
-    private Double weight;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "survey_group_id", nullable = false)

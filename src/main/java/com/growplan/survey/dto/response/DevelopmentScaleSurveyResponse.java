@@ -1,8 +1,8 @@
 package com.growplan.survey.dto.response;
 
 import com.growplan.child.domain.UserChild;
-import com.growplan.survey.domain.SurveyGroup;
 import com.growplan.survey.domain.SurveyResult;
+import com.growplan.survey.domain.SurveyTitle;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class DevelopmentScaleSurveyResponse {
             final UserChild userChild,
             final Integer months,
             final List<SurveyResult> surveyResults,
-            final List<SurveyGroup> surveyGroups
+            final List<SurveyTitle> surveyTitles
     ) {
         final LocalDate surveyDate = surveyResults.isEmpty() ? null : surveyResults.get(0).getCreatedAt().toLocalDate();
 
@@ -45,9 +45,9 @@ public class DevelopmentScaleSurveyResponse {
                 ))
                 .toList();
 
-        final List<SurveyTitleResponse> titleResponses = surveyGroups.stream()
+        final List<SurveyTitleResponse> titleResponses = surveyTitles.stream()
                 .map(surveyGroup -> SurveyTitleResponse.of(
-                        surveyGroup.getDevelopmentType().getType(),
+                        surveyGroup.getDevelopmentType(),
                         surveyGroup.getTitle()
                 ))
                 .toList();

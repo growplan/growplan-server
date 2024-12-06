@@ -16,10 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.growplan.common.code.ExceptionCode.*;
 
@@ -39,15 +40,31 @@ public class DevelopService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        // TODO 주수로 변경 가능
-        final Double childAge = calculateAge(userChild.getBirthdate());
-        final Integer months = calculateAgeInMonths(userChild.getBirthdate());
+        final Integer childMonths = calculateAgeInMonths(userChild.getBirthdate());
 
         final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId());
 
-        final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByValidAge(childAge);
+        final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByMonths(childMonths);
+        final List<SurveyTitle> surveyTitles = getRandomSurveyTitles(surveyGroups);
 
-        return DevelopmentScaleSurveyResponse.of(userChild, months, surveyResults, surveyGroups);
+        return DevelopmentScaleSurveyResponse.of(userChild, childMonths, surveyResults, surveyTitles);
+    }
+
+    private List<SurveyTitle> getRandomSurveyTitles(final List<SurveyGroup> surveyGroups) {
+        final Random random = new Random();
+
+        return surveyGroups.stream()
+                .map(surveyGroup -> {
+                    final List<String> titles = surveyGroup.getSurveys().stream()
+                            .map(Survey::getTitle)
+                            .collect(Collectors.toList());
+
+                    final String title = titles.get(random.nextInt(titles.size()));
+                    final String developmentType = surveyGroup.getDevelopmentType().getType();
+
+                    return new SurveyTitle(title, developmentType);
+                })
+                .collect(Collectors.toList());
     }
 
     public DevelopmentResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
@@ -58,11 +75,14 @@ public class DevelopService {
 
         final List<ChildSurvey> surveys = getChildSurveys(userChild, currentDate, developmentType);
 
+        // TODO 효율적인 방법 필요
+        final SurveyGroup surveyGroup = surveys.isEmpty() ? null : surveys.get(0).getSurvey().getSurveyGroup();
+
         final Integer developmentScore = calculateDevelopmentScore(surveys);
-        final Boolean isRisk = calculateRisk(developmentScore);
+        final Boolean isRisk = calculateRisk(developmentScore, surveyGroup);
 
         final SurveyResult surveyResult = getOrCreateSurveyResult(userChild, developmentType, currentDate, developmentScore, isRisk, surveys);
-        final List<Feedback> feedbacks = getFeedbacks(surveys, developmentScore);
+        final List<Feedback> feedbacks = getFeedbacks(surveys, developmentScore, surveyGroup);
 
         updateSurveyScore(surveyResult, developmentScore, isRisk);
 
@@ -78,30 +98,19 @@ public class DevelopService {
     }
 
     private Integer calculateDevelopmentScore(final List<ChildSurvey> surveys) {
-        double totalWeight = 0.0;
-        double totalScore = 0.0;
-
-        for (final ChildSurvey survey : surveys) {
-            totalWeight += survey.getSurvey().getWeight();
-        }
-
-        for (final ChildSurvey survey : surveys) {
-            final Double weight = survey.getSurvey().getWeight();
-            final Integer status = survey.getStatus();
-
-            totalScore += (weight / totalWeight) * (status / 4.0);
-        }
-
-        final double developmentScore = totalScore * 24.0;
-        return (int) Math.round(developmentScore);
+        return surveys.stream()
+                .mapToInt(ChildSurvey::getStatus)
+                .sum();
     }
 
-    private Boolean calculateRisk(final Integer developmentScore) {
-        return developmentScore <= 6;
+    private Boolean calculateRisk(final Integer developmentScore, final SurveyGroup surveyGroup) {
+        return surveyGroup != null && developmentScore <= surveyGroup.getLowScore();
     }
 
-    private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore) {
-        final SurveyGroup surveyGroup = surveys.get(0).getSurvey().getSurveyGroup();
+    private List<Feedback> getFeedbacks(final List<ChildSurvey> surveys, final Integer developmentScore, final SurveyGroup surveyGroup) {
+        if (surveyGroup == null) {
+            return List.of();
+        }
 
         return surveyGroup.getFeedbacks().stream()
                 .filter(feedback -> feedback.getMinRange() <= developmentScore && developmentScore < feedback.getMaxRange())
@@ -130,21 +139,6 @@ public class DevelopService {
             surveyResult.updateSurveyResult(developmentScore, isRisk);
             surveyResultRepository.save(surveyResult);
         }
-    }
-
-    private Period getAgePeriod(final String birthdateStr) {
-        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        final LocalDate birthdate = LocalDate.parse(birthdateStr, formatter);
-        final LocalDate today = LocalDate.now();
-        return Period.between(birthdate, today);
-    }
-
-    private Double calculateAge(final String birthdateStr) {
-        final Period period = getAgePeriod(birthdateStr);
-        final int years = period.getYears();
-        final int months = period.getMonths();
-
-        return years + (months / 100.0);
     }
 
     private int calculateAgeInMonths(final String birthdateStr) {

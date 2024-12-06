@@ -14,9 +14,9 @@ public interface ChildSurveyRepository extends JpaRepository<ChildSurvey, Long> 
             SELECT cs FROM ChildSurvey cs
             LEFT JOIN FETCH cs.survey s
             LEFT JOIN FETCH s.surveyGroup sg
-            WHERE s.minAge <= :childAge AND s.maxAge >= :childAge AND DATE(cs.updatedAt) = :currentDate
+            WHERE sg.minMonth <= :months AND sg.maxMonth >= :months AND DATE(cs.updatedAt) = :currentDate
             """)
-    List<ChildSurvey> findByChildAge(@Param("childAge") final Double childAge, @Param("currentDate") final LocalDate date);
+    List<ChildSurvey> findByMonths(@Param("months") final Integer months, @Param("currentDate") final LocalDate date);
 
     @Query("""
             SELECT cs FROM ChildSurvey cs

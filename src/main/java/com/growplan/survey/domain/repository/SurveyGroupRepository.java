@@ -12,7 +12,8 @@ public interface SurveyGroupRepository extends JpaRepository<SurveyGroup, Long> 
     @Query("""
             SELECT sg FROM SurveyGroup sg
             LEFT JOIN FETCH sg.surveys s
-            WHERE s.minAge <= :childAge AND s.maxAge >= :childAge
+            LEFT JOIN FETCH sg.developmentType d
+            WHERE sg.minMonth <= :months AND sg.maxMonth >= :months
             """)
-    List<SurveyGroup> findSurveyGroupByValidAge(@Param("childAge") final Double childAge);
+    List<SurveyGroup> findSurveyGroupByMonths(@Param("months") final Integer months);
 }

@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChildSurveyUpdateRequest {
 
-    @Min(1)
-    @Max(4)
+    @Min(0)
+    @Max(3)
     @NotNull(message = "설문 점수를 입력해주세요.")
     private Integer status;
 }

@@ -31,7 +31,7 @@ public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long
     @Query("""
             SELECT sr FROM SurveyResult sr
             LEFT JOIN FETCH sr.developmentType dt
-            WHERE FUNCTION('YEAR', sr.updatedAt) = :year 
+            WHERE FUNCTION('YEAR', sr.updatedAt) = :year
             AND FUNCTION('MONTH', sr.updatedAt) = :month
             AND sr.userChild.id = :childId
             """)
@@ -40,7 +40,7 @@ public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long
     @Query("""
             SELECT sr FROM SurveyResult sr
             LEFT JOIN FETCH sr.developmentType dt
-            WHERE FUNCTION('YEAR', sr.updatedAt) = :year 
+            WHERE FUNCTION('YEAR', sr.updatedAt) = :year
             AND FUNCTION('MONTH', sr.updatedAt) = :month
             AND sr.userChild.id = :childId AND dt.type = :developmentType
             """)

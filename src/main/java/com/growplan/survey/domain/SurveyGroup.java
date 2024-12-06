@@ -20,12 +20,24 @@ public class SurveyGroup {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "development_type_id", nullable = false)
     private DevelopmentType developmentType;
+
+    @Column(nullable = false)
+    private Integer minMonth;
+
+    @Column(nullable = false)
+    private Integer maxMonth;
+
+    @Column(nullable = false)
+    private Integer lowScore;
+
+    @Column(nullable = false)
+    private Integer midScore;
+
+    @Column(nullable = false)
+    private Integer highScore;
 
     @OneToMany(mappedBy = "surveyGroup", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Survey> surveys = new ArrayList<>();
