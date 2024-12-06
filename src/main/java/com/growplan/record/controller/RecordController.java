@@ -31,7 +31,7 @@ public class RecordController {
     @Parameter(name = "sort", description = "정렬 기준 (asc: 오름차순, desc: 내림차순)", example = "desc")
     // @Parameter(name = "startDate", description = "조회 시작일 (YYYY-MM-DD 형식)", example = "2023-01-01")
     // @Parameter(name = "endDate", description = "조회 종료일 (YYYY-MM-DD 형식)", example = "2023-12-31")
-    @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH)", required = true, example = "GM")
+    @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH) / 적용 안하면 모든 발달 영역 조회", example = "GM")
     @Parameter(name = "isLiked", description = "좋아요 여부 (true: 좋아요 있음, false: 좋아요 없음)", example = "true")
     @GetMapping
     public ResponseEntity<RecordListResponse> getRecords(
@@ -40,8 +40,8 @@ public class RecordController {
             @RequestParam(value = "sort", defaultValue = "desc") final String sort,
             // @RequestParam(value = "startDate", required = false) final String startDate,
             // @RequestParam(value = "endDate", required = false) final String endDate,
-            @RequestParam(value = "developmentType") final String developmentType,
-            @RequestParam(value = "isLiked", required = false) final Boolean isLiked
+            @RequestParam(value = "developmentType", required = false) final String developmentType,
+            @RequestParam(value = "isLiked", defaultValue = "false") final Boolean isLiked
     ) {
         final RecordListResponse response = recordService.getRecords(userId, childId, sort, developmentType, isLiked);
         return ResponseEntity.ok().body(response);
