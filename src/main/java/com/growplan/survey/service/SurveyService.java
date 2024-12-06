@@ -44,10 +44,7 @@ public class SurveyService {
 
         final List<ChildSurvey> childSurveys = childSurveyRepository.findByMonths(childMonth, currentDate);
 
-        final Map<String, List<ChildSurvey>> groupedChildSurveys = childSurveys.stream()
-                .collect(Collectors.groupingBy(childSurvey -> childSurvey.getSurvey().getSurveyGroup().getTitle()));
-
-        return SurveyListResponse.of(groupedChildSurveys);
+        return SurveyListResponse.of(childSurveys);
     }
 
     @Transactional(readOnly = true)
