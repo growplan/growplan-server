@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Develop-Controller", description = "발달 API 엔드포인트")
-@RequestMapping("/users/{userId}/children/{childId}/developments")
+@RequestMapping("/users/{userId}/childs/{childId}/developments")
 public class DevelopController {
 
     private final DevelopService developService;

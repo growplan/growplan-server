@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Record-Controller", description = "기록 API 엔드포인트")
-@RequestMapping("/users/{userId}/children/{childId}/records")
+@RequestMapping("/users/{userId}/childs/{childId}/records")
 public class RecordController {
 
     private final RecordService recordService;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Report-Controller", description = "레포트 API 엔드포인트")
-@RequestMapping("/users/{userId}/children/{childId}/reports")
+@RequestMapping("/users/{userId}/childs/{childId}/reports")
 public class ReportController {
 
     private final ReportService reportService;
