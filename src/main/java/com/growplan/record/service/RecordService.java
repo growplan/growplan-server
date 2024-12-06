@@ -42,12 +42,13 @@ public class RecordService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    public RecordListResponse getRecords(final Long userId, final Long childId, final String sort, final String startDate, final String endDate, final String developmentType) {
+    public RecordListResponse getRecords(final Long userId, final Long childId, final String sort, final String developmentType, final boolean isLiked) {
         List<ChildRecord> records = recordRepository.findRecordsByUserIdAndChildId(userId, childId);
 
         records = filterByDevelopmentType(records, developmentType);
-        records = filterByDate(records, startDate, endDate);
+        // records = filterByDate(records, startDate, endDate);
         records = sortRecords(records, sort);
+        records = filterByIsLiked(records, sort, isLiked);
 
         return RecordListResponse.of(records);
     }
@@ -80,11 +81,30 @@ public class RecordService {
                 .collect(Collectors.toList());
     }
 
-    private List<ChildRecord> sortRecords(List<ChildRecord> records, String sort) {
+    private List<ChildRecord> sortRecords(final List<ChildRecord> records, final String sort) {
         if ("asc".equalsIgnoreCase(sort)) {
             records.sort(Comparator.comparing(ChildRecord::getCreatedAt));
         } else {
             records.sort(Comparator.comparing(ChildRecord::getCreatedAt).reversed());
+        }
+        return records;
+    }
+
+    private List<ChildRecord> filterByIsLiked(final List<ChildRecord> records, final String sort, boolean isLiked) {
+        if (isLiked) {
+            records.sort((r1, r2) -> {
+                final boolean r1HasLike = r1.isLiked();
+                final boolean r2HasLike = r2.isLiked();
+
+                if (r1HasLike && !r2HasLike) {
+                    return -1;
+                }
+                if (!r1HasLike && r2HasLike) {
+                    return 1;
+                }
+
+                return "asc".equalsIgnoreCase(sort) ? r1.getCreatedAt().compareTo(r2.getCreatedAt()) : r2.getCreatedAt().compareTo(r1.getCreatedAt());
+            });
         }
         return records;
     }
@@ -102,7 +122,7 @@ public class RecordService {
 
         checkCountOfImage(files);
 
-        final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild);
+        final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild, false);
         final ChildRecord savedRecord = recordRepository.save(record);
 
         saveRecordImages(savedRecord, files);
@@ -111,11 +131,13 @@ public class RecordService {
     }
 
     private void saveRecordImages(final ChildRecord record, final List<MultipartFile> files) {
-        final List<String> imageUrls = saveImages(files);
-        final List<Image> images = imageUrls.stream()
-                .map(imageUrl -> new Image(imageUrl, record))
-                .collect(Collectors.toList());
-        imageRepository.saveAll(images);
+        if (files != null) {
+            final List<String> imageUrls = saveImages(files);
+            final List<Image> images = imageUrls.stream()
+                    .map(imageUrl -> new Image(imageUrl, record))
+                    .collect(Collectors.toList());
+            imageRepository.saveAll(images);
+        }
     }
 
     private List<String> saveImages(final List<MultipartFile> files) {
@@ -133,7 +155,7 @@ public class RecordService {
         childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
 
-        final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild());
+        final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild(), childRecord.isLiked());
         final ChildRecord savedRecord = recordRepository.save(record);
 
         saveRecordImages(savedRecord, files);
@@ -161,8 +183,16 @@ public class RecordService {
     }
 
     private void checkCountOfImage(final List<MultipartFile> files) {
-        if (files.size() > 5) {
+        if (files != null && files.size() > 5) {
             throw new ImageException(EXCEEDED_MAX_IMAGE_UPLOAD);
         }
+    }
+
+    public void toggleLike(final Long userId, final Long recordId) {
+        final ChildRecord record = recordRepository.findByUserIdAndRecordId(userId, recordId)
+                .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
+
+        record.toggleIsLiked();
+        recordRepository.save(record);
     }
 }

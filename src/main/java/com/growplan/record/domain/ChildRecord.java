@@ -32,14 +32,22 @@ public class ChildRecord extends BaseEntity {
     @JoinColumn(nullable = false, name = "child_id")
     private UserChild userChild;
 
+    @Column(nullable = false)
+    private boolean isLiked;
+
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<ChildRecordTag> recordTags = new HashSet<>();
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
-    public ChildRecord(final String script, final UserChild userChild) {
+    public ChildRecord(final String script, final UserChild userChild, final boolean isLiked) {
         this.script = script;
         this.userChild = userChild;
+        this.isLiked = isLiked;
+    }
+
+    public void toggleIsLiked() {
+        this.isLiked = !this.isLiked();
     }
 }

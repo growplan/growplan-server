@@ -29,19 +29,21 @@ public class RecordController {
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @Parameter(name = "sort", description = "정렬 기준 (asc: 오름차순, desc: 내림차순)", example = "desc")
-    @Parameter(name = "startDate", description = "조회 시작일 (YYYY-MM-DD 형식)", example = "2023-01-01")
-    @Parameter(name = "endDate", description = "조회 종료일 (YYYY-MM-DD 형식)", example = "2023-12-31")
+    // @Parameter(name = "startDate", description = "조회 시작일 (YYYY-MM-DD 형식)", example = "2023-01-01")
+    // @Parameter(name = "endDate", description = "조회 종료일 (YYYY-MM-DD 형식)", example = "2023-12-31")
     @Parameter(name = "developmentType", description = "발달 영역 (GM, LM, CG, LG, SC, SH)", required = true, example = "GM")
+    @Parameter(name = "isLiked", description = "좋아요 여부 (true: 좋아요 있음, false: 좋아요 없음)", example = "true")
     @GetMapping
     public ResponseEntity<RecordListResponse> getRecords(
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @RequestParam(value = "sort", defaultValue = "desc") final String sort,
-            @RequestParam(value = "startDate", required = false) final String startDate,
-            @RequestParam(value = "endDate", required = false) final String endDate,
-            @RequestParam(value = "developmentType") final String developmentType
+            // @RequestParam(value = "startDate", required = false) final String startDate,
+            // @RequestParam(value = "endDate", required = false) final String endDate,
+            @RequestParam(value = "developmentType") final String developmentType,
+            @RequestParam(value = "isLiked", required = false) final Boolean isLiked
     ) {
-        final RecordListResponse response = recordService.getRecords(userId, childId, sort, startDate, endDate, developmentType);
+        final RecordListResponse response = recordService.getRecords(userId, childId, sort, developmentType, isLiked);
         return ResponseEntity.ok().body(response);
     }
 
@@ -71,7 +73,7 @@ public class RecordController {
             @PathVariable("userId") final Long userId,
             @PathVariable("childId") final Long childId,
             @RequestPart("requestDto") @Valid final RecordRequest recordRequest,
-            @RequestPart("files") List<MultipartFile> files
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
         recordService.saveRecord(userId, childId, recordRequest, files);
         return ResponseEntity.noContent().build();
@@ -90,7 +92,7 @@ public class RecordController {
             @PathVariable("childId") final Long childId,
             @PathVariable("recordId") final Long recordId,
             @RequestPart("requestDto") @Valid final RecordRequest recordRequest,
-            @RequestPart("files") List<MultipartFile> files
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
         recordService.updateRecord(userId, childId, recordId, recordRequest, files);
         return ResponseEntity.noContent().build();
@@ -108,6 +110,21 @@ public class RecordController {
             @PathVariable("recordId") final Long recordId
     ) {
         recordService.deleteRecord(userId, childId, recordId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "발달 일지 좋아요 토글", description = "발달 일지에 좋아요를 토글합니다. 존재하면 삭제, 없으면 추가합니다.")
+    @ApiResponse(responseCode = "204", description = "발달 일지 좋아요 토글에 성공했습니다.")
+    @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
+    @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
+    @Parameter(name = "recordId", description = "기록 아이디", required = true, example = "1")
+    @PostMapping("/{recordId}/like")
+    public ResponseEntity<Void> toggleLike(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @PathVariable("recordId") final Long recordId
+    ) {
+        recordService.toggleLike(userId, recordId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -30,4 +30,13 @@ public interface RecordRepository extends JpaRepository<ChildRecord, Long> {
             WHERE cr.userChild.id = :childId AND cr.id = :recordId
             """)
     Optional<ChildRecord> findByChildIdAndRecordId(@Param("childId") final Long childId, @Param("recordId") final Long recordId);
+
+    @Query("""
+            SELECT cr
+            FROM ChildRecord cr
+            LEFT JOIN FETCH cr.userChild u
+            LEFT JOIN FETCH u.user
+            WHERE u.id = :userId AND cr.id = :recordId
+            """)
+    Optional<ChildRecord> findByUserIdAndRecordId(@Param("userId") final Long userId, @Param("recordId") final Long recordId);
 }

@@ -24,6 +24,9 @@ public class RecordResponse {
     @Schema(description = "발달 영역 리스트", example = "[\"GM\", \"LM\"]")
     private final List<String> developmentTypes;
 
+    @Schema(description = "발달 일지 좋아요 여부 (true: 좋아요 O, false: 좋아요 X)", example = "true")
+    private final Boolean isLiked;
+
     @Schema(description = "이미지 URL 리스트", example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
     private final List<String> imageUrls;
 
@@ -41,6 +44,7 @@ public class RecordResponse {
                 record.getScript(),
                 record.getCreatedAt().toLocalDate(),
                 developmentTypes,
+                record.isLiked(),
                 imageUrls
         );
     }
