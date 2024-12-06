@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DevelopmentResultResponse {
 
-    @Schema(description = "설문 날짜", example = "2024-11-25")
+    @Schema(description = "설문 날짜 (YYYY-MM-DD 형식)", example = "2024-11-01")
     private final LocalDate surveyDate;
 
     @Schema(description = "발달 점수", example = "25")

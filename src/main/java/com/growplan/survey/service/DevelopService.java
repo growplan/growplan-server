@@ -19,6 +19,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import static com.growplan.common.code.ExceptionCode.*;
 
@@ -43,8 +45,26 @@ public class DevelopService {
         final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId());
 
         final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByMonths(childMonths);
+        final List<SurveyTitle> surveyTitles = getRandomSurveyTitles(surveyGroups);
 
-        return DevelopmentScaleSurveyResponse.of(userChild, childMonths, surveyResults, surveyGroups);
+        return DevelopmentScaleSurveyResponse.of(userChild, childMonths, surveyResults, surveyTitles);
+    }
+
+    private List<SurveyTitle> getRandomSurveyTitles(final List<SurveyGroup> surveyGroups) {
+        final Random random = new Random();
+
+        return surveyGroups.stream()
+                .map(surveyGroup -> {
+                    final List<String> titles = surveyGroup.getSurveys().stream()
+                            .map(Survey::getTitle)
+                            .collect(Collectors.toList());
+
+                    final String title = titles.get(random.nextInt(titles.size()));
+                    final String developmentType = surveyGroup.getDevelopmentType().getType();
+
+                    return new SurveyTitle(title, developmentType);
+                })
+                .collect(Collectors.toList());
     }
 
     public DevelopmentResultResponse getDevelopmentResult(final Long userId, final Long childId, final String developmentType) {
