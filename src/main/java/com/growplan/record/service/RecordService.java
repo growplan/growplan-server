@@ -7,6 +7,7 @@ import com.growplan.common.exception.ImageException;
 import com.growplan.image.domain.Image;
 import com.growplan.image.domain.repository.ImageRepository;
 import com.growplan.image.service.ImageService;
+import com.growplan.like.domain.repository.LikeRepository;
 import com.growplan.record.domain.ChildRecord;
 import com.growplan.record.domain.ChildRecordTag;
 import com.growplan.record.domain.repository.RecordRepository;
@@ -40,6 +41,7 @@ public class RecordService {
     private final DevelopmentTypeRepository developmentTypeRepository;
     private final RecordTagRepository recordTagRepository;
     private final ImageRepository imageRepository;
+    private final LikeRepository likeRepository;
     private final ImageService imageService;
 
     public RecordListResponse getRecords(final Long userId, final Long childId, final String sort, final String startDate, final String endDate, final String developmentType) {
@@ -157,6 +159,7 @@ public class RecordService {
                 .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
         childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
+        likeRepository.delete(childRecord.getRecordLike());
         recordRepository.delete(childRecord);
     }
 

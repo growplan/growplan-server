@@ -13,8 +13,7 @@ public enum ExceptionCode {
     INVALID_ACCESS_TOKEN(2002, "유효하지 않은 AccessToken입니다."),
     EXPIRED_REFRESH_TOKEN(2003, "만료된 AccessToken입니다."),
     EXPIRED_ACCESS_TOKEN(2004, "만료된 RefreshToken입니다."),
-    USERNAME_NOT_FOUND(2006, "존재하지 않는 아이디입니다."),
-    INCORRECT_PASSWORD(2007, "비밀번호가 일치하지 않습니다."),
+
     USER_NOT_FOUND(2008, "존재하지 않는 회원입니다."),
     FAIL_TO_SOCIAL_LOGIN(2009, "소셜 로그인에 실패했습니다."),
 
