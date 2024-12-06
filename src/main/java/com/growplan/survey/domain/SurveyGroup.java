@@ -20,9 +20,6 @@ public class SurveyGroup {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "development_type_id", nullable = false)
     private DevelopmentType developmentType;
