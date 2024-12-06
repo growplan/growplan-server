@@ -132,7 +132,7 @@ public class RecordService {
 
     private void saveRecordImages(final ChildRecord record, final List<MultipartFile> files) {
         if (files != null) {
-            final List<String> imageUrls = saveImages(files);
+            final List<String> imageUrls = uploadImages(files);
             final List<Image> images = imageUrls.stream()
                     .map(imageUrl -> new Image(imageUrl, record))
                     .collect(Collectors.toList());
@@ -140,7 +140,7 @@ public class RecordService {
         }
     }
 
-    private List<String> saveImages(final List<MultipartFile> files) {
+    private List<String> uploadImages(final List<MultipartFile> files) {
         return files.stream()
                 .map(file -> imageService.upload(file, "record"))
                 .collect(Collectors.toList());
