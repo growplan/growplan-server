@@ -7,7 +7,6 @@ import com.growplan.common.exception.ImageException;
 import com.growplan.image.domain.Image;
 import com.growplan.image.domain.repository.ImageRepository;
 import com.growplan.image.service.ImageService;
-import com.growplan.like.domain.repository.LikeRepository;
 import com.growplan.record.domain.ChildRecord;
 import com.growplan.record.domain.ChildRecordTag;
 import com.growplan.record.domain.repository.RecordRepository;
@@ -41,7 +40,6 @@ public class RecordService {
     private final DevelopmentTypeRepository developmentTypeRepository;
     private final RecordTagRepository recordTagRepository;
     private final ImageRepository imageRepository;
-    private final LikeRepository likeRepository;
     private final ImageService imageService;
 
     public RecordListResponse getRecords(final Long userId, final Long childId, final String sort, final String startDate, final String endDate, final String developmentType) {
@@ -104,7 +102,7 @@ public class RecordService {
 
         checkCountOfImage(files);
 
-        final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild);
+        final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild, false);
         final ChildRecord savedRecord = recordRepository.save(record);
 
         saveRecordImages(savedRecord, files);
@@ -135,7 +133,7 @@ public class RecordService {
         childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
 
-        final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild());
+        final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild(), childRecord.isLiked());
         final ChildRecord savedRecord = recordRepository.save(record);
 
         saveRecordImages(savedRecord, files);
@@ -159,7 +157,6 @@ public class RecordService {
                 .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
         childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
-        likeRepository.delete(childRecord.getRecordLike());
         recordRepository.delete(childRecord);
     }
 
@@ -167,5 +164,13 @@ public class RecordService {
         if (files.size() > 5) {
             throw new ImageException(EXCEEDED_MAX_IMAGE_UPLOAD);
         }
+    }
+
+    public void toggleLike(final Long userId, final Long recordId) {
+        final ChildRecord record = recordRepository.findByUserIdAndRecordId(userId, recordId)
+                .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
+
+        record.toggleIsLiked();
+        recordRepository.save(record);
     }
 }

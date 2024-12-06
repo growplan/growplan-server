@@ -3,7 +3,6 @@ package com.growplan.record.domain;
 import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
 import com.growplan.image.domain.Image;
-import com.growplan.like.domain.RecordLike;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,21 +35,19 @@ public class ChildRecord extends BaseEntity {
     @Column(nullable = false)
     private boolean isLiked;
 
-    @OneToOne(mappedBy = "childRecord")
-    private RecordLike recordLike;
-
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<ChildRecordTag> recordTags = new HashSet<>();
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<Image> images = new HashSet<>();
 
-    public ChildRecord(final String script, final UserChild userChild) {
+    public ChildRecord(final String script, final UserChild userChild, final boolean isLiked) {
         this.script = script;
         this.userChild = userChild;
+        this.isLiked = isLiked;
     }
 
-    public boolean isLiked() {
-        return recordLike != null;
+    public void toggleIsLiked() {
+        this.isLiked = !this.isLiked();
     }
 }

@@ -110,4 +110,19 @@ public class RecordController {
         recordService.deleteRecord(userId, childId, recordId);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "발달 일지 좋아요 토글", description = "발달 일지에 좋아요를 토글합니다. 존재하면 삭제, 없으면 추가합니다.")
+    @ApiResponse(responseCode = "204", description = "발달 일지 좋아요 토글에 성공했습니다.")
+    @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
+    @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
+    @Parameter(name = "recordId", description = "기록 아이디", required = true, example = "1")
+    @PostMapping("/{recordId}/like")
+    public ResponseEntity<Void> toggleLike(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("childId") final Long childId,
+            @PathVariable("recordId") final Long recordId
+    ) {
+        recordService.toggleLike(userId, recordId);
+        return ResponseEntity.noContent().build();
+    }
 }
