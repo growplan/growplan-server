@@ -49,6 +49,7 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://growplan.netlify.app"));
         config.setExposedHeaders(List.of("*"));
         config.setAllowCredentials(true);
+        config.setAllowedOrigins(List.of("http://localhost:5173", "https://growplan.netlify.app"));
 
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
