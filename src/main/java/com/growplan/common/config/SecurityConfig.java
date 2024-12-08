@@ -22,8 +22,6 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @Configuration
 public class SecurityConfig {
 
-    @Value("${cors.allowed.origins}")
-    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,7 +46,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedOriginPatterns(allowedOrigins);
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://growplan.netlify.app"));
         config.setExposedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
