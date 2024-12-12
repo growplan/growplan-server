@@ -30,6 +30,9 @@ public enum ExceptionCode {
     EXCEEDED_MAX_IMAGE_UPLOAD(5005, "최대 5개까지 이미지 업로드가 가능합니다."),
 
     DEVELOPMENT_TYPE_NOT_FOUND(6001, "요청에 해당하는 발달 영역을 찾을 수 없습니다."),
+    PROVINCE_NOT_FOUND(6002, "존재하지 않는 지역입니다."),
+    CENTER_TAG_NOT_FOUND(6003, "존재하지 않는 센터 태그입니다."),
+
 
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
