@@ -15,14 +15,8 @@ public class UserResponse {
     @Schema(description = "사용자 이름", example = "김동동")
     private final String name;
 
-    @Schema(description = "사용자 생년월일", example = "1990-01-01")
-    private final String birthdate;
-
     @Schema(description = "사용자 이메일", example = "example@example.com")
     private final String email;
-
-    @Schema(description = "사용자 전화번호", example = "01012345678")
-    private final String number;
 
     @Schema(description = "사용자 소셜 로그인 타입 (kakao, naver)", example = "kakao")
     private final String socialLoginType;
@@ -34,9 +28,7 @@ public class UserResponse {
         return new UserResponse(
                 user.getId(),
                 user.getName(),
-                user.getBirthdate(),
                 user.getEmail(),
-                user.getNumber(),
                 user.getSocialLoginType().getCode(),
                 user.getIsValid().getStatusCode()
         );
