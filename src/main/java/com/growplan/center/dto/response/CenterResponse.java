@@ -27,7 +27,7 @@ public class CenterResponse {
 
     public static CenterResponse of(final Center center) {
         final List<String> tags = center.getCenterTags().stream()
-                .map(centerTag -> CenterTagType.of(centerTag.getDevelopmentType().getType()).getName())
+                .map(centerTag -> CenterTagType.valueOf(centerTag.getDevelopmentType().getType()).getName())
                 .collect(Collectors.toList());
 
         return new CenterResponse(

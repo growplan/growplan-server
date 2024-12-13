@@ -2,6 +2,7 @@ package com.growplan.center.service;
 
 import com.growplan.center.domain.Center;
 import com.growplan.center.domain.repository.CenterRepository;
+import com.growplan.center.domain.type.CenterTagType;
 import com.growplan.center.domain.type.ProvinceType;
 import com.growplan.center.dto.response.CenterListResponse;
 import com.growplan.common.exception.BadRequestException;
@@ -35,7 +36,11 @@ public class CenterService {
     }
 
     private Long getLastPageIndex(final int pageSize, final List<String> centerTags, final String province, final String city, final String neighborhood) {
-        final Long centerCount = centerRepository.countFilteredCenters(centerTags, province, city, neighborhood);
+        List<Center> centers = centerRepository.findAll();
+        centers = filterByCenterTag(centers, centerTags);
+        centers = filterByLocation(centers, province, city, neighborhood);
+
+        final int centerCount = centers.size();
         final long lastPageIndex = centerCount / pageSize;
         if (centerCount % pageSize == 0) {
             return lastPageIndex;
@@ -50,7 +55,7 @@ public class CenterService {
         return centers.stream()
                 .filter(center ->
                         center.getCenterTags().stream()
-                                .anyMatch(tag -> centerTags.contains(tag.getDevelopmentType().getType()))
+                                .anyMatch(tag -> centerTags.contains(CenterTagType.valueOf(tag.getDevelopmentType().getType()).getName()))
                 )
                 .collect(Collectors.toList());
     }
@@ -61,7 +66,7 @@ public class CenterService {
         final String query = createQuery(province, city, neighborhood);
 
         return centers.stream()
-                .filter(center -> center.getLocation().equals(query))
+                .filter(center -> center.getLocation().contains(query))
                 .collect(Collectors.toList());
     }
 

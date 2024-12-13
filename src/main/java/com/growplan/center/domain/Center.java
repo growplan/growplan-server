@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -29,5 +31,5 @@ public class Center {
     private String location;
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<CenterTag> centerTags = new ArrayList<>();
+    private Set<CenterTag> centerTags = new HashSet<>();
 }
