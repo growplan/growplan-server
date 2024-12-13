@@ -1,5 +1,6 @@
 package com.growplan.survey.domain;
 
+import com.growplan.center.domain.CenterTag;
 import com.growplan.record.domain.ChildRecordTag;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -28,4 +29,7 @@ public class DevelopmentType {
 
     @OneToMany(mappedBy = "developmentType")
     private List<SurveyGroup> surveyGroups;
+
+    @OneToMany(mappedBy = "developmentType")
+    private List<CenterTag> centerTags;
 }

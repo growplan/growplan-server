@@ -36,12 +36,8 @@ public class User extends BaseEntity {
 
     private String name;
 
-    private String birthdate;
-
     @Column(nullable = false)
     private String email;
-
-    private String number;
 
     @Column(nullable = false, unique = true)
     private String socialLoginId;
@@ -65,16 +61,12 @@ public class User extends BaseEntity {
 
     public User(
             final String name,
-            final String birthdate,
             final String email,
-            final String number,
             final String socialLoginId,
             final SocialLoginType socialLoginType
     ) {
         this.name = name;
-        this.birthdate = birthdate;
         this.email = email;
-        this.number = number;
         this.socialLoginId = socialLoginId;
         this.socialLoginType = socialLoginType;
         this.isValid = ACTIVE;
@@ -92,15 +84,9 @@ public class User extends BaseEntity {
     }
 
     public void updateUser(
-            final String name,
-            final String birthdate,
-            final String email,
-            final String number
+            final String name
     ) {
         this.name = name;
-        this.birthdate = birthdate;
-        this.email = email;
-        this.number = number;
         this.isValid = ACTIVE;
     }
 }

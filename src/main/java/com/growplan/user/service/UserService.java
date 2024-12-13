@@ -38,12 +38,7 @@ public class UserService {
         final User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BadRequestException(USER_NOT_FOUND));
 
-        user.updateUser(
-                userUpdateRequest.getName(),
-                userUpdateRequest.getBirthdate(),
-                userUpdateRequest.getEmail(),
-                userUpdateRequest.getNumber()
-        );
+        user.updateUser(userUpdateRequest.getName());
 
         userRepository.save(user);
     }

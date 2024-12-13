@@ -21,8 +21,8 @@ public class ChildController {
 
     private final ChildService childService;
 
-    @Operation(summary = "아이 전체 조회", description = "아이를 전체 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "아이 전체 조회에 성공했습니다.")
+    @Operation(summary = "사용자의 아이 전체 조회", description = "사용자의아이를 전체 조회합니다.")
+    @ApiResponse(responseCode = "200", description = "사용자의 아이 전체 조회에 성공했습니다.")
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @GetMapping
     public ResponseEntity<ChildListResponse> getChildren(@PathVariable("userId") final Long userId) {

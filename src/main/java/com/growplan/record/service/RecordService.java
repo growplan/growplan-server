@@ -54,7 +54,7 @@ public class RecordService {
     }
 
     private List<ChildRecord> filterByDevelopmentType(List<ChildRecord> records, String developmentType) {
-        if (developmentType == null || developmentType.isEmpty()) {
+        if (developmentType == null || developmentType.trim().isEmpty()) {
             return records;
         }
 

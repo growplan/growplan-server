@@ -5,6 +5,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 @Getter
 @RequiredArgsConstructor
 public class ChildResponse {
@@ -33,6 +37,9 @@ public class ChildResponse {
     @Schema(description = "출생 당시 주수, 없을 시 null 반환", example = "40.0")
     private final Double birthWeeks;
 
+    @Schema(description = "아이 개월 수", example = "24")
+    private final Integer months;
+
     public static ChildResponse of(final UserChild userChild) {
         return new ChildResponse(
                 userChild.getId(),
@@ -42,7 +49,16 @@ public class ChildResponse {
                 userChild.getBornHeight(),
                 userChild.getBornWeight(),
                 userChild.getIsPremature(),
-                userChild.getBirthWeeks()
+                userChild.getBirthWeeks(),
+                calculateAgeInMonths(userChild.getBirthdate())
         );
+    }
+
+    private static int calculateAgeInMonths(final String birthdateStr) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        final LocalDate birthdate = LocalDate.parse(birthdateStr, formatter);
+        final LocalDate today = LocalDate.now();
+
+        return (int) ChronoUnit.MONTHS.between(birthdate, today);
     }
 }
