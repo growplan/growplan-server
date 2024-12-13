@@ -1,6 +1,7 @@
 package com.growplan.center.dto.response;
 
 import com.growplan.center.domain.Center;
+import com.growplan.center.domain.type.CenterTagType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class CenterResponse {
 
     public static CenterResponse of(final Center center) {
         final List<String> tags = center.getCenterTags().stream()
-                .map(centerTag -> centerTag.getName())
+                .map(centerTag -> CenterTagType.valueOf(centerTag.getDevelopmentType().getType()).getName())
                 .collect(Collectors.toList());
 
         return new CenterResponse(

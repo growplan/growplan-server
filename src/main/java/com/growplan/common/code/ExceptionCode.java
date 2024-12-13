@@ -32,7 +32,7 @@ public enum ExceptionCode {
     DEVELOPMENT_TYPE_NOT_FOUND(6001, "요청에 해당하는 발달 영역을 찾을 수 없습니다."),
     PROVINCE_NOT_FOUND(6002, "존재하지 않는 지역입니다."),
     CENTER_TAG_NOT_FOUND(6003, "존재하지 않는 센터 태그입니다."),
-
+    CENTER_FILTER_QUERY_CREATE_FAILED(6003, "센터 필터 쿼리 생성에 실패했습니다."),
 
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
