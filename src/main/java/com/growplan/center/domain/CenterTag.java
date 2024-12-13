@@ -1,6 +1,6 @@
 package com.growplan.center.domain;
 
-import com.growplan.common.BaseEntity;
+import com.growplan.survey.domain.DevelopmentType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +20,11 @@ public class CenterTag {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "center_id", nullable = false)
     private Center center;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "development_type_id", nullable = false)
+    private DevelopmentType developmentType;
 }

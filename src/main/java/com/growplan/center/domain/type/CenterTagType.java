@@ -10,19 +10,19 @@ import static com.growplan.common.code.ExceptionCode.CENTER_TAG_NOT_FOUND;
 @Getter
 public enum CenterTagType {
 
-    LANGUAGE("언어"),
-    PLAY("놀이"),
-    PSYCHOLOGY("심리"),
-    SENSORY_INTEGRATION("감각통합"),
-    COGNITION("인지"),
-    ART("미술"),
-    SOCIAL_SKILLS("사회성"),
-    SPECIAL_PHYSICAL_EDUCATION("특수체육"),
-    ABA("ABA"),
-    EXERCISE("운동"),
-    MUSIC("음악"),
-    WORK("작업"),
-    BEHAVIOR("행동");
+    LG("언어"),
+    PL("놀이"),
+    PS("심리"),
+    SI("감각통합"),
+    CO("인지"),
+    AR("미술"),
+    SO("사회성"),
+    PE("특수체육"),
+    AB("ABA"),
+    EX("운동"),
+    MU("음악"),
+    OT("작업"),
+    BH("행동");
 
     private final String name;
 
