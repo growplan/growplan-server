@@ -52,6 +52,7 @@ public class LoginService {
     private User createMember(final OauthMember oauthMember) {
         final User user = new User(
                 oauthMember.getEmail(),
+                oauthMember.getNickname(),
                 oauthMember.getSocialLoginId(),
                 oauthMember.getSocialLoginType()
         );
