@@ -34,7 +34,8 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(nullable = false, unique = true)
+    private String nickname;
 
     @Column(nullable = false)
     private String email;
@@ -60,12 +61,12 @@ public class User extends BaseEntity {
     private UserSign userSign;
 
     public User(
-            final String name,
+            final String nickname,
             final String email,
             final String socialLoginId,
             final SocialLoginType socialLoginType
     ) {
-        this.name = name;
+        this.nickname = nickname;
         this.email = email;
         this.socialLoginId = socialLoginId;
         this.socialLoginType = socialLoginType;
@@ -84,9 +85,9 @@ public class User extends BaseEntity {
     }
 
     public void updateUser(
-            final String name
+            final String nickname
     ) {
-        this.name = name;
+        this.nickname = nickname;
         this.isValid = ACTIVE;
     }
 }

@@ -12,8 +12,8 @@ public class SignUpResponse {
     @Schema(description = "사용자 아이디", example = "1")
     private final Long id;
 
-    @Schema(description = "사용자 이름", example = "김동동")
-    private final String name;
+    @Schema(description = "사용자 닉네임", example = "김동동")
+    private final String nickname;
 
     @Schema(description = "사용자 이메일", example = "example@example.com")
     private final String email;
@@ -24,7 +24,7 @@ public class SignUpResponse {
     public static SignUpResponse of(final User user) {
         return new SignUpResponse(
                 user.getId(),
-                user.getName(),
+                user.getNickname(),
                 user.getEmail(),
                 user.getIsValid().getStatusCode()
         );
