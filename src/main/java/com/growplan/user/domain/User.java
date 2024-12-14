@@ -1,5 +1,6 @@
 package com.growplan.user.domain;
 
+import com.growplan.center.domain.Scrap;
 import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
 import com.growplan.common.type.StatusType;
@@ -56,6 +57,9 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<UserChild> userChildren = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Scrap> scraps = new ArrayList<>();
 
     @OneToOne(orphanRemoval = true, cascade = CascadeType.ALL)
     private UserSign userSign;
