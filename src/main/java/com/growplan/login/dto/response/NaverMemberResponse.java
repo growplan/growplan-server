@@ -24,5 +24,6 @@ public class NaverMemberResponse {
     public static class NaverMemberDetail {
         private String id;
         private String email;
+        private String nickname;
     }
 }
