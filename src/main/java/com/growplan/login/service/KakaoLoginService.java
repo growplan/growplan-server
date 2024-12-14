@@ -35,6 +35,7 @@ public class KakaoLoginService {
 
         return new OauthMember(
                 kakaoMemberResponse.getKakaoAccount().getEmail(),
+                kakaoMemberResponse.getKakaoAccount().getProfile().getNickname(),
                 socialLoginId,
                 KAKAO
         );

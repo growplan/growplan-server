@@ -36,6 +36,7 @@ public class NaverLoginService {
 
         return new OauthMember(
                 memberDetail.getEmail(),
+                memberDetail.getNickname(),
                 socialLoginId,
                 NAVER
         );

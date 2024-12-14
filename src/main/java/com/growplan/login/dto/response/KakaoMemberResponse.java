@@ -16,5 +16,11 @@ public class KakaoMemberResponse {
     @Data
     public static class KakaoAccount {
         private String email;
+        private Profile profile;
+    }
+
+    @Data
+    public static class Profile {
+        private String nickname;
     }
 }

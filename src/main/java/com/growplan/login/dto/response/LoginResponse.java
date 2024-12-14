@@ -15,6 +15,9 @@ public class LoginResponse {
     @Schema(description = "사용자 이메일", example = "example@example.com")
     private final String email;
 
+    @Schema(description = "사용자 닉네임", example = "김동동")
+    private final String nickname;
+
     @Schema(description = "사용자 소셜 로그인 타입 (kakao, naver)", example = "kakao")
     private final String socialLoginType;
 
@@ -36,6 +39,7 @@ public class LoginResponse {
         return new LoginResponse(
                 user.getId(),
                 user.getEmail(),
+                user.getNickname(),
                 user.getSocialLoginType().getCode(),
                 isAdditionalSignup,
                 accessToken,

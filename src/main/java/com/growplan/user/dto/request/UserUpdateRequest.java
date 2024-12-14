@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserUpdateRequest {
 
-    @NotBlank(message = "사용자 이름을 입력해주세요.")
-    @Schema(description = "사용자 이름", example = "김보리")
-    private String name;
+    @NotBlank(message = "사용자 닉네임을 입력해주세요.")
+    @Schema(description = "사용자 닉네임", example = "김동동")
+    private String nickname;
 }
