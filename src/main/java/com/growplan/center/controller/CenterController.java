@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -38,9 +41,10 @@ public class CenterController {
             @RequestParam(value = "centerTags", required = false) final List<String> centerTags,
             @RequestParam(value = "province", required = false) final String province,
             @RequestParam(value = "city", required = false) final String city,
-            @RequestParam(value = "neighborhood", required = false) final String neighborhood
+            @RequestParam(value = "neighborhood", required = false) final String neighborhood,
+            @RequestParam(value = "isScraped", required = false) final Boolean isScraped
     ) {
-        final CenterListResponse centerListResponse = centerService.getCentersByPage(pageable, centerTags, province, city, neighborhood, userId);
+        final CenterListResponse centerListResponse = centerService.getCentersByPage(pageable, centerTags, province, city, neighborhood, userId, isScraped);
         return ResponseEntity.ok().body(centerListResponse);
     }
 }

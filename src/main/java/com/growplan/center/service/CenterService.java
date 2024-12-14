@@ -24,13 +24,14 @@ public class CenterService {
 
     private final CenterRepository centerRepository;
 
-    public CenterListResponse getCentersByPage(final Pageable pageable, final List<String> centerTags, final String province, final String city, final String neighborhood, final Long userId) {
+    public CenterListResponse getCentersByPage(final Pageable pageable, final List<String> centerTags, final String province, final String city, final String neighborhood, final Long userId, final Boolean isScraped) {
         List<Center> centers;
 
         centers = centerRepository.findAllByPageable(pageable.previousOrFirst());
 
         centers = filterByCenterTag(centers, centerTags);
         centers = filterByLocation(centers, province, city, neighborhood);
+        centers = filterByIsScraped(centers, userId, isScraped);
 
         final Long lastPageIndex = getLastPageIndex(pageable.getPageSize(), centerTags, province, city, neighborhood);
 
@@ -70,6 +71,15 @@ public class CenterService {
 
         return centers.stream()
                 .filter(center -> center.getLocation().contains(query))
+                .collect(Collectors.toList());
+    }
+
+    private List<Center> filterByIsScraped(final List<Center> centers, final Long userId, final Boolean isScraped) {
+        if (!isScraped) return centers;
+
+        return centers.stream()
+                .filter(center -> center.getScraps().stream()
+                        .anyMatch(scrap -> scrap.getUser().getId().equals(userId)))
                 .collect(Collectors.toList());
     }
 
