@@ -25,7 +25,10 @@ public class CenterResponse {
     @Schema(description = "센터 태그 리스트", example = "[\"언어\", \"운동\"]")
     private final List<String> tags;
 
-    public static CenterResponse of(final Center center) {
+    @Schema(description = "스크랩 여부", example = "false")
+    private final Boolean isScraped;
+
+    public static CenterResponse of(final Center center, final Boolean isScraped) {
         final List<String> tags = center.getCenterTags().stream()
                 .map(centerTag -> CenterTagType.valueOf(centerTag.getDevelopmentType().getType()).getName())
                 .collect(Collectors.toList());
@@ -34,7 +37,8 @@ public class CenterResponse {
                 center.getId(),
                 center.getName(),
                 center.getLocation(),
-                tags
+                tags,
+                isScraped
         );
     }
 }

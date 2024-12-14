@@ -5,6 +5,7 @@ import com.growplan.center.domain.repository.CenterRepository;
 import com.growplan.center.domain.type.CenterTagType;
 import com.growplan.center.domain.type.ProvinceType;
 import com.growplan.center.dto.response.CenterListResponse;
+import com.growplan.center.dto.response.CenterResponse;
 import com.growplan.common.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,7 +24,7 @@ public class CenterService {
 
     private final CenterRepository centerRepository;
 
-    public CenterListResponse getCentersByPage(final Pageable pageable, final List<String> centerTags, final String province, final String city, final String neighborhood) {
+    public CenterListResponse getCentersByPage(final Pageable pageable, final List<String> centerTags, final String province, final String city, final String neighborhood, final Long userId) {
         List<Center> centers;
 
         centers = centerRepository.findAllByPageable(pageable.previousOrFirst());
@@ -32,7 +33,9 @@ public class CenterService {
         centers = filterByLocation(centers, province, city, neighborhood);
 
         final Long lastPageIndex = getLastPageIndex(pageable.getPageSize(), centerTags, province, city, neighborhood);
-        return CenterListResponse.of(centers, lastPageIndex);
+
+        final List<CenterResponse> centerResponses = createCenterResponse(centers, userId);
+        return CenterListResponse.of(centerResponses, lastPageIndex);
     }
 
     private Long getLastPageIndex(final int pageSize, final List<String> centerTags, final String province, final String city, final String neighborhood) {
@@ -78,5 +81,15 @@ public class CenterService {
         else if (province != null && city != null && neighborhood != null)
             return ProvinceType.of(province).getName() + " " + city + " " + neighborhood;
         throw new BadRequestException(CENTER_FILTER_QUERY_CREATE_FAILED);
+    }
+
+    private List<CenterResponse> createCenterResponse(final List<Center> centers, final Long userId) {
+        return centers.stream()
+                .map(center -> {
+                    final boolean isScraped = center.getScraps().stream()
+                            .anyMatch(scrap -> scrap.getUser() != null && scrap.getUser().getId().equals(userId));
+                    return CenterResponse.of(center, isScraped);
+                })
+                .collect(Collectors.toList());
     }
 }

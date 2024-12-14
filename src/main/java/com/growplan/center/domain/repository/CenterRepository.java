@@ -13,6 +13,7 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
              SELECT c
              FROM Center c
              LEFT JOIN FETCH c.centerTags ct
+             LEFT JOIN FETCH c.scraps s
              LEFT JOIN FETCH ct.developmentType d
             """)
     List<Center> findAllByPageable(final Pageable pageable);
