@@ -34,6 +34,8 @@ public enum ExceptionCode {
     CENTER_TAG_NOT_FOUND(6003, "존재하지 않는 센터 태그입니다."),
     CENTER_FILTER_QUERY_CREATE_FAILED(6003, "센터 필터 쿼리 생성에 실패했습니다."),
 
+    CENTER_NOT_FOUND(6004, "존재하지 않는 센터입니다."),
+
     INTERNAL_SERVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;

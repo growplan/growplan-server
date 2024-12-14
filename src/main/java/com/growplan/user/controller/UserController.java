@@ -1,5 +1,6 @@
 package com.growplan.user.controller;
 
+import com.growplan.center.service.ScrapService;
 import com.growplan.user.dto.request.UserUpdateRequest;
 import com.growplan.user.dto.response.UserListResponse;
 import com.growplan.user.dto.response.UserResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final ScrapService scrapService;
 
     @Operation(summary = "유저 전체 조회", description = "유저를 전체 조회합니다.")
     @ApiResponse(responseCode = "200", description = "유저 전체 조회에 성공했습니다.")
@@ -56,6 +58,19 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteAccount(@PathVariable("userId") final Long userId) {
         userService.deleteAccount(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "센터 스크랩", description = "센터를 스크랩합니다.")
+    @ApiResponse(responseCode = "204", description = "센터 스크랩에 성공했습니다.")
+    @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
+    @Parameter(name = "centerId", description = "센터 아이디", required = true, example = "1")
+    @GetMapping("/{userId}/centers/{centerId}")
+    public ResponseEntity<Void> saveScrap(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("centerId") final Long centerId
+    ) {
+        scrapService.saveScrap(userId, centerId);
         return ResponseEntity.noContent().build();
     }
 }

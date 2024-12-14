@@ -32,4 +32,7 @@ public class Center {
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<CenterTag> centerTags = new HashSet<>();
+
+    @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<Scrap> scraps = new ArrayList<>();
 }
