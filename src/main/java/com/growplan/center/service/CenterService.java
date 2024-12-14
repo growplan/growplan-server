@@ -9,9 +9,11 @@ import com.growplan.center.dto.response.CenterResponse;
 import com.growplan.common.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,24 +29,47 @@ public class CenterService {
     public CenterListResponse getCentersByPage(final Pageable pageable, final List<String> centerTags, final String province, final String city, final String neighborhood, final Long userId, final Boolean isScraped) {
         List<Center> centers;
 
-        centers = centerRepository.findAllByPageable(pageable.previousOrFirst());
+        final String locationQuery = createQuery(province, city, neighborhood);
+        final List<String> centerTagNames = getCenterTagNames(centerTags);
 
-        centers = filterByCenterTag(centers, centerTags);
-        centers = filterByLocation(centers, province, city, neighborhood);
-        centers = filterByIsScraped(centers, userId, isScraped);
+        centers = centerRepository.findFilteredCentersByPageable(
+                centerTagNames,
+                locationQuery,
+                userId,
+                isScraped,
+                pageable.previousOrFirst()
+        );
 
-        final Long lastPageIndex = getLastPageIndex(pageable.getPageSize(), centerTags, province, city, neighborhood);
+        final Long lastPageIndex = getLastPageIndex(
+                pageable.getPageSize(),
+                centerTagNames,
+                locationQuery,
+                userId,
+                isScraped
+        );
 
         final List<CenterResponse> centerResponses = createCenterResponse(centers, userId);
         return CenterListResponse.of(centerResponses, lastPageIndex);
     }
 
-    private Long getLastPageIndex(final int pageSize, final List<String> centerTags, final String province, final String city, final String neighborhood) {
-        List<Center> centers = centerRepository.findAll();
-        centers = filterByCenterTag(centers, centerTags);
-        centers = filterByLocation(centers, province, city, neighborhood);
+    private List<String> getCenterTagNames(List<String> centerTags) {
+        if (centerTags == null) {
+            return null;
+        }
 
-        final int centerCount = centers.size();
+        return centerTags.stream()
+                .map(centerTag -> CenterTagType.of(centerTag).toString())
+                .collect(Collectors.toList());
+    }
+
+    private Long getLastPageIndex(final int pageSize, final List<String> centerTags, final String locationQuery, final Long userId, final Boolean isScraped) {
+        final long centerCount = centerRepository.countFilteredCenters(
+                centerTags,
+                locationQuery,
+                userId,
+                isScraped
+        );
+
         final long lastPageIndex = centerCount / pageSize;
         if (centerCount % pageSize == 0) {
             return lastPageIndex;
@@ -52,39 +77,10 @@ public class CenterService {
         return lastPageIndex + 1;
     }
 
-    private List<Center> filterByCenterTag(final List<Center> centers, final List<String> centerTags) {
-        if (centerTags == null || centerTags.isEmpty() || centers == null) {
-            return centers;
-        }
-        return centers.stream()
-                .filter(center ->
-                        center.getCenterTags().stream()
-                                .anyMatch(tag -> centerTags.contains(CenterTagType.valueOf(tag.getDevelopmentType().getType()).getName()))
-                )
-                .collect(Collectors.toList());
-    }
-
-    private List<Center> filterByLocation(final List<Center> centers, final String province, final String city, final String neighborhood) {
-        if (province == null) return centers;
-
-        final String query = createQuery(province, city, neighborhood);
-
-        return centers.stream()
-                .filter(center -> center.getLocation().contains(query))
-                .collect(Collectors.toList());
-    }
-
-    private List<Center> filterByIsScraped(final List<Center> centers, final Long userId, final Boolean isScraped) {
-        if (!isScraped) return centers;
-
-        return centers.stream()
-                .filter(center -> center.getScraps().stream()
-                        .anyMatch(scrap -> scrap.getUser().getId().equals(userId)))
-                .collect(Collectors.toList());
-    }
-
     private String createQuery(final String province, final String city, final String neighborhood) {
-        if (province != null && city == null)
+        if (province == null)
+            return null;
+        else if (province != null && city == null)
             return ProvinceType.of(province).getName();
         else if (province != null && city != null && neighborhood == null)
             return ProvinceType.of(province).getName() + " " + city;

@@ -37,12 +37,12 @@ public class CenterController {
     @GetMapping
     public ResponseEntity<CenterListResponse> getCenters(
             @PageableDefault(page = 1, size = 6) final Pageable pageable,
-            @RequestParam(value = "userId", required = false) final Long userId,
+            @RequestParam(value = "userId") final Long userId,
             @RequestParam(value = "centerTags", required = false) final List<String> centerTags,
             @RequestParam(value = "province", required = false) final String province,
             @RequestParam(value = "city", required = false) final String city,
             @RequestParam(value = "neighborhood", required = false) final String neighborhood,
-            @RequestParam(value = "isScraped", required = false) final Boolean isScraped
+            @RequestParam(value = "isScraped", defaultValue = "false") final Boolean isScraped
     ) {
         final CenterListResponse centerListResponse = centerService.getCentersByPage(pageable, centerTags, province, city, neighborhood, userId, isScraped);
         return ResponseEntity.ok().body(centerListResponse);
