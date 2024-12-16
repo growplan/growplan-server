@@ -67,7 +67,7 @@ public class RecordController {
     @Parameter(name = "userId", description = "유저 아이디", required = true, example = "1")
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @Parameter(description = "발달 일지 저장 정보", required = true)
-    @Parameter(description = "업로드할 사진 파일들")
+    @Parameter(description = "업로드할 사진 파일들 (최대 5개)")
     @PostMapping
     public ResponseEntity<Void> saveRecord(
             @PathVariable("userId") final Long userId,
@@ -85,7 +85,7 @@ public class RecordController {
     @Parameter(name = "childId", description = "아이 아이디", required = true, example = "1")
     @Parameter(name = "recordId", description = "기록 아이디", required = true, example = "1")
     @Parameter(description = "발달 일지 수정 정보", required = true)
-    @Parameter(description = "업로드할 사진 파일들")
+    @Parameter(description = "업로드할 사진 파일들 (최대 5개)")
     @PutMapping("/{recordId}")
     public ResponseEntity<Void> updateRecord(
             @PathVariable("userId") final Long userId,
