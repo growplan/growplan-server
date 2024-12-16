@@ -1,5 +1,6 @@
-package com.growplan.record.domain;
+package com.growplan.post.entity;
 
+import com.growplan.record.domain.Tag;
 import com.growplan.survey.domain.DevelopmentType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,20 +12,20 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@DiscriminatorValue("CHILD_RECORD")
+@DiscriminatorValue("POST")
 @NoArgsConstructor(access = PROTECTED)
-public class ChildRecordTag extends Tag {
+public class PostTag extends Tag {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_id", nullable = false)
-    private ChildRecord childRecord;
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    public ChildRecordTag(final DevelopmentType developmentType, final ChildRecord childRecord) {
+    public PostTag(final DevelopmentType developmentType, final Post post) {
         super(developmentType);
-        this.childRecord = childRecord;
+        this.post = post;
     }
 }

@@ -7,24 +7,25 @@ import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@DiscriminatorValue("CHILD_RECORD")
+@Inheritance(strategy = SINGLE_TABLE)
 @NoArgsConstructor(access = PROTECTED)
-public class ChildRecordTag extends Tag {
+@DiscriminatorColumn
+public abstract class Tag {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "record_id", nullable = false)
-    private ChildRecord childRecord;
+    @JoinColumn(name = "development_type_id", nullable = false)
+    private DevelopmentType developmentType;
 
-    public ChildRecordTag(final DevelopmentType developmentType, final ChildRecord childRecord) {
-        super(developmentType);
-        this.childRecord = childRecord;
+    public Tag(final DevelopmentType developmentType) {
+        this.developmentType = developmentType;
     }
 }
