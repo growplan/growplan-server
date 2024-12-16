@@ -9,13 +9,16 @@ import org.hibernate.annotations.DynamicInsert;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.InheritanceType.SINGLE_TABLE;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @DynamicInsert
+@Inheritance(strategy = SINGLE_TABLE)
 @NoArgsConstructor(access = PROTECTED)
-public class Scrap extends BaseEntity {
+@DiscriminatorColumn
+public abstract class Scrap extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -25,15 +28,9 @@ public class Scrap extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "center_id", nullable = false)
-    private Center center;
-
     public Scrap(
-            final User user,
-            final Center center
+            final User user
     ) {
         this.user = user;
-        this.center = center;
     }
 }
