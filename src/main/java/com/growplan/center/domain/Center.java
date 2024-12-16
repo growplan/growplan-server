@@ -30,7 +30,7 @@ public class Center {
     private String location;
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<CenterTag> centerTags = new HashSet<>();
+    private Set<CenterDevTag> centerDevTags = new HashSet<>();
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<CenterScrap> centerScraps = new ArrayList<>();

@@ -3,7 +3,6 @@ package com.growplan.record.service;
 import com.growplan.child.domain.UserChild;
 import com.growplan.child.domain.repository.ChildRepository;
 import com.growplan.common.exception.BadRequestException;
-import com.growplan.common.exception.ImageException;
 import com.growplan.image.domain.Image;
 import com.growplan.image.domain.repository.ImageRepository;
 import com.growplan.image.service.ImageService;
@@ -11,7 +10,7 @@ import com.growplan.record.domain.ChildRecord;
 import com.growplan.record.domain.ChildRecordImage;
 import com.growplan.record.domain.ChildRecordTag;
 import com.growplan.record.domain.repository.RecordRepository;
-import com.growplan.record.domain.repository.RecordTagRepository;
+import com.growplan.record.domain.repository.TagRepository;
 import com.growplan.record.dto.request.RecordRequest;
 import com.growplan.record.dto.response.RecordListResponse;
 import com.growplan.record.dto.response.RecordResponse;
@@ -29,7 +28,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.growplan.common.code.ExceptionCode.*;
+import static com.growplan.common.code.ExceptionCode.RECORD_NOT_FOUND;
+import static com.growplan.common.code.ExceptionCode.USER_CHILD_NOT_FOUND;
 
 @Service
 @Transactional
@@ -39,7 +39,7 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final ChildRepository childRepository;
     private final DevelopmentTypeRepository developmentTypeRepository;
-    private final RecordTagRepository recordTagRepository;
+    private final TagRepository tagRepository;
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
@@ -121,7 +121,7 @@ public class RecordService {
         final UserChild userChild = childRepository.findByUserIdAndChildId(userId, childId)
                 .orElseThrow(() -> new BadRequestException(USER_CHILD_NOT_FOUND));
 
-        checkCountOfImage(files);
+        imageService.checkCountOfImage(files);
 
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), userChild, false);
         final ChildRecord savedRecord = recordRepository.save(record);
@@ -151,7 +151,7 @@ public class RecordService {
         final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
                 .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
-        checkCountOfImage(files);
+        imageService.checkCountOfImage(files);
 
         childRecord.getChildRecordImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
@@ -172,7 +172,7 @@ public class RecordService {
             childRecordTags.add(new ChildRecordTag(developmentType, savedRecord));
         }
 
-        recordTagRepository.saveAll(childRecordTags);
+        tagRepository.saveAll(childRecordTags);
     }
 
     public void deleteRecord(final Long userId, final Long childId, final Long recordId) {
@@ -181,12 +181,6 @@ public class RecordService {
 
         childRecord.getChildRecordImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
-    }
-
-    private void checkCountOfImage(final List<MultipartFile> files) {
-        if (files != null && files.size() > 5) {
-            throw new ImageException(EXCEEDED_MAX_IMAGE_UPLOAD);
-        }
     }
 
     public void toggleLike(final Long userId, final Long recordId) {

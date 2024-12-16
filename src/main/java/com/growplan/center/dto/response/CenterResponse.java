@@ -29,7 +29,7 @@ public class CenterResponse {
     private final Boolean isScraped;
 
     public static CenterResponse of(final Center center, final Boolean isScraped) {
-        final List<String> tags = center.getCenterTags().stream()
+        final List<String> tags = center.getCenterDevTags().stream()
                 .map(centerTag -> CenterTagType.valueOf(centerTag.getDevelopmentType().getType()).getName())
                 .collect(Collectors.toList());
 

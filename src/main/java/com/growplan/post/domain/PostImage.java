@@ -1,7 +1,6 @@
-package com.growplan.post.entity;
+package com.growplan.post.domain;
 
-import com.growplan.center.domain.Scrap;
-import com.growplan.user.domain.User;
+import com.growplan.image.domain.Image;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -16,17 +15,17 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @DiscriminatorValue("POST")
 @NoArgsConstructor(access = PROTECTED)
-public class PostScrap extends Scrap {
+public class PostImage extends Image {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
-    public PostScrap(
-            final User user,
+    public PostImage(
+            final String imageUrl,
             final Post post
     ) {
-        super(user);
+        super(imageUrl);
         this.post = post;
     }
 }
