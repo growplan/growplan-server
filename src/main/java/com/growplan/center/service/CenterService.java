@@ -9,11 +9,9 @@ import com.growplan.center.dto.response.CenterResponse;
 import com.growplan.common.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,7 +90,7 @@ public class CenterService {
     private List<CenterResponse> createCenterResponse(final List<Center> centers, final Long userId) {
         return centers.stream()
                 .map(center -> {
-                    final boolean isScraped = center.getScraps().stream()
+                    final boolean isScraped = center.getCenterScraps().stream()
                             .anyMatch(scrap -> scrap.getUser() != null && scrap.getUser().getId().equals(userId));
                     return CenterResponse.of(center, isScraped);
                 })

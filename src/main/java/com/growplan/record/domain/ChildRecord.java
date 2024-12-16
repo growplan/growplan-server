@@ -2,7 +2,6 @@ package com.growplan.record.domain;
 
 import com.growplan.child.domain.UserChild;
 import com.growplan.common.BaseEntity;
-import com.growplan.image.domain.Image;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +38,7 @@ public class ChildRecord extends BaseEntity {
     private Set<ChildRecordTag> recordTags = new HashSet<>();
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<Image> images = new HashSet<>();
+    private Set<ChildRecordImage> childRecordImages = new HashSet<>();
 
     public ChildRecord(final String script, final UserChild userChild, final boolean isLiked) {
         this.script = script;

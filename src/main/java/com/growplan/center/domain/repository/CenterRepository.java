@@ -15,13 +15,13 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
             FROM Center c
             LEFT JOIN c.centerTags ct
             LEFT JOIN ct.developmentType d
-            LEFT JOIN c.scraps s
+            LEFT JOIN c.centerScraps s
             WHERE (:centerTags IS NULL OR ct.developmentType.type IN :centerTags)
             AND (:locationQuery IS NULL OR c.location LIKE %:locationQuery%)
             AND (
                 :isScraped IS NULL OR :isScraped = false OR EXISTS (
                     SELECT 1
-                    FROM Scrap sc
+                    FROM CenterScrap sc
                     WHERE sc.user.id = :userId AND sc.center = c
                 )
             )
@@ -39,13 +39,13 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
             FROM Center c
             LEFT JOIN c.centerTags ct
             LEFT JOIN ct.developmentType d
-            LEFT JOIN c.scraps s
+            LEFT JOIN c.centerScraps s
             WHERE (:centerTags IS NULL OR ct.developmentType.type IN :centerTags)
             AND (:locationQuery IS NULL OR c.location LIKE %:locationQuery%)
             AND (
-                :isScraped = false OR EXISTS (
+                :isScraped IS NULL OR :isScraped = false OR EXISTS (
                     SELECT 1
-                    FROM Scrap sc
+                    FROM CenterScrap sc
                     WHERE sc.user.id = :userId AND sc.center = c
                 )
             )

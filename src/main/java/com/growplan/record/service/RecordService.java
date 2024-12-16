@@ -8,6 +8,7 @@ import com.growplan.image.domain.Image;
 import com.growplan.image.domain.repository.ImageRepository;
 import com.growplan.image.service.ImageService;
 import com.growplan.record.domain.ChildRecord;
+import com.growplan.record.domain.ChildRecordImage;
 import com.growplan.record.domain.ChildRecordTag;
 import com.growplan.record.domain.repository.RecordRepository;
 import com.growplan.record.domain.repository.RecordTagRepository;
@@ -134,7 +135,7 @@ public class RecordService {
         if (files != null) {
             final List<String> imageUrls = uploadImages(files);
             final List<Image> images = imageUrls.stream()
-                    .map(imageUrl -> new Image(imageUrl, record))
+                    .map(imageUrl -> new ChildRecordImage(imageUrl, record))
                     .collect(Collectors.toList());
             imageRepository.saveAll(images);
         }
@@ -152,7 +153,7 @@ public class RecordService {
 
         checkCountOfImage(files);
 
-        childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
+        childRecord.getChildRecordImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
 
         final ChildRecord record = new ChildRecord(recordRequest.getScript(), childRecord.getUserChild(), childRecord.isLiked());
@@ -168,7 +169,7 @@ public class RecordService {
         List<ChildRecordTag> childRecordTags = new ArrayList<>();
 
         for (DevelopmentType developmentType : developmentTypes) {
-            childRecordTags.add(new ChildRecordTag(savedRecord, developmentType));
+            childRecordTags.add(new ChildRecordTag(developmentType, savedRecord));
         }
 
         recordTagRepository.saveAll(childRecordTags);
@@ -178,7 +179,7 @@ public class RecordService {
         final ChildRecord childRecord = recordRepository.findByChildIdAndRecordId(childId, recordId)
                 .orElseThrow(() -> new BadRequestException(RECORD_NOT_FOUND));
 
-        childRecord.getImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
+        childRecord.getChildRecordImages().forEach(image -> imageService.deleteFileFromS3(image.getImageUrl()));
         recordRepository.delete(childRecord);
     }
 
