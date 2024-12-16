@@ -11,8 +11,9 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
+@DiscriminatorValue("CHILD_RECORD")
 @NoArgsConstructor(access = PROTECTED)
-public class ChildRecordTag {
+public class ChildRecordTag extends Tag {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -22,12 +23,8 @@ public class ChildRecordTag {
     @JoinColumn(name = "record_id", nullable = false)
     private ChildRecord childRecord;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "development_type_id", nullable = false)
-    private DevelopmentType developmentType;
-
-    public ChildRecordTag(final ChildRecord childRecord, final DevelopmentType developmentType) {
+    public ChildRecordTag(final DevelopmentType developmentType, final ChildRecord childRecord) {
+        super(developmentType);
         this.childRecord = childRecord;
-        this.developmentType = developmentType;
     }
 }

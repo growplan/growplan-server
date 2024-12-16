@@ -35,7 +35,7 @@ public class RecordResponse {
                 .map(recordTag -> recordTag.getDevelopmentType().getType())
                 .toList();
 
-        final List<String> imageUrls = record.getImages().stream()
+        final List<String> imageUrls = record.getChildRecordImages().stream()
                 .map(image -> image.getImageUrl())
                 .toList();
 

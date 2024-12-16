@@ -1,6 +1,5 @@
 package com.growplan.center.domain;
 
-import com.growplan.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,8 +30,11 @@ public class Center {
     private String location;
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<CenterTag> centerTags = new HashSet<>();
+    private Set<CenterDevTag> centerDevTags = new HashSet<>();
 
     @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
-    private List<Scrap> scraps = new ArrayList<>();
+    private List<CenterScrap> centerScraps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "center", orphanRemoval = true, cascade = CascadeType.ALL)
+    private Set<CenterImage> centerImages = new HashSet<>();
 }

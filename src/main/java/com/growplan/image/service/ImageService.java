@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -87,6 +88,12 @@ public class ImageService {
             amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, decodedFileName));
         } catch (AmazonServiceException e) {
             throw new ImageException(FILE_DELETE_FAILED);
+        }
+    }
+
+    public void checkCountOfImage(final List<MultipartFile> files) {
+        if (files != null && files.size() > 5) {
+            throw new ImageException(EXCEEDED_MAX_IMAGE_UPLOAD);
         }
     }
 }
