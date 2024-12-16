@@ -3,6 +3,7 @@ package com.growplan.post.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,12 +21,12 @@ public class PostRequest {
     @Schema(description = "게시물 제목", example = "아이가 공을 가지고 놀아요.")
     private String title;
 
-    @NotBlank(message = "아이 개월수를 입력해주세요.")
+    @NotNull(message = "아이 개월수를 입력해주세요.")
     @Schema(description = "아이 개월수", example = "39")
     private Integer months;
 
     @NotBlank(message = "게시물 본문을 입력해주세요.")
-    @Schema(description = "게시물 본문", example = "")
+    @Schema(description = "게시물 본문", example = "아이가 공놀이를 하며 소근육 발달에 도움을 받고 있습니다.")
     private String content;
 
     @NotEmpty(message = "발달 영역을 하나 이상 선택해주세요.")
