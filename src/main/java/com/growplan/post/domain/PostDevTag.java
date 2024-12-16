@@ -1,30 +1,28 @@
-package com.growplan.post.entity;
+package com.growplan.post.domain;
 
 import com.growplan.record.domain.Tag;
 import com.growplan.survey.domain.DevelopmentType;
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
 @DiscriminatorValue("POST")
 @NoArgsConstructor(access = PROTECTED)
-public class PostTag extends Tag {
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+public class PostDevTag extends Tag {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
 
-    public PostTag(final DevelopmentType developmentType, final Post post) {
+    public PostDevTag(final DevelopmentType developmentType, final Post post) {
         super(developmentType);
         this.post = post;
     }

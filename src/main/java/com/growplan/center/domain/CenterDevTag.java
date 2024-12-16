@@ -16,13 +16,13 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @DiscriminatorValue("CENTER")
 @NoArgsConstructor(access = PROTECTED)
-public class CenterTag extends Tag {
+public class CenterDevTag extends Tag {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "center_id", nullable = false)
+    @JoinColumn(name = "center_id")
     private Center center;
 
-    public CenterTag(final DevelopmentType developmentType, final Center center) {
+    public CenterDevTag(final DevelopmentType developmentType, final Center center) {
         super(developmentType);
         this.center = center;
     }

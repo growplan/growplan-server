@@ -1,4 +1,4 @@
-package com.growplan.post.entity;
+package com.growplan.post.domain;
 
 import com.growplan.common.BaseEntity;
 import com.growplan.user.domain.User;
@@ -41,5 +41,20 @@ public class Post extends BaseEntity {
     private List<PostTag> postTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<PostDevTag> postDevTags = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<PostImage> postImages = new ArrayList<>();
+
+    public Post(
+            final String title,
+            final String content,
+            final Integer months,
+            final User user
+    ) {
+        this.title = title;
+        this.content = content;
+        this.months = months;
+        this.user = user;
+    }
 }

@@ -13,10 +13,10 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
     @Query("""
             SELECT DISTINCT c
             FROM Center c
-            LEFT JOIN c.centerTags ct
-            LEFT JOIN ct.developmentType d
+            LEFT JOIN c.centerDevTags cdt
+            LEFT JOIN cdt.developmentType d
             LEFT JOIN c.centerScraps s
-            WHERE (:centerTags IS NULL OR ct.developmentType.type IN :centerTags)
+            WHERE (:centerTags IS NULL OR cdt.developmentType.type IN :centerTags)
             AND (:locationQuery IS NULL OR c.location LIKE %:locationQuery%)
             AND (
                 :isScraped IS NULL OR :isScraped = false OR EXISTS (
@@ -37,10 +37,10 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
     @Query("""
             SELECT COUNT(DISTINCT c)
             FROM Center c
-            LEFT JOIN c.centerTags ct
-            LEFT JOIN ct.developmentType d
+            LEFT JOIN c.centerDevTags cdt
+            LEFT JOIN cdt.developmentType d
             LEFT JOIN c.centerScraps s
-            WHERE (:centerTags IS NULL OR ct.developmentType.type IN :centerTags)
+            WHERE (:centerTags IS NULL OR cdt.developmentType.type IN :centerTags)
             AND (:locationQuery IS NULL OR c.location LIKE %:locationQuery%)
             AND (
                 :isScraped IS NULL OR :isScraped = false OR EXISTS (
