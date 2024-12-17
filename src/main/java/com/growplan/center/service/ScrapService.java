@@ -1,7 +1,7 @@
 package com.growplan.center.service;
 
 import com.growplan.center.domain.Center;
-import com.growplan.center.domain.Scrap;
+import com.growplan.center.domain.CenterScrap;
 import com.growplan.center.domain.repository.CenterRepository;
 import com.growplan.center.domain.repository.ScrapRepository;
 import com.growplan.common.exception.BadRequestException;
@@ -33,7 +33,7 @@ public class ScrapService {
         scrapRepository.findByUserIdAndCenterId(userId, centerId)
                 .ifPresentOrElse(
                         existingScrap -> scrapRepository.delete(existingScrap),
-                        () -> scrapRepository.save(new Scrap(user, center))
+                        () -> scrapRepository.save(new CenterScrap(user, center))
                 );
     }
 }

@@ -14,9 +14,9 @@ public interface RecordRepository extends JpaRepository<ChildRecord, Long> {
             SELECT cr
             FROM ChildRecord cr
             LEFT JOIN FETCH cr.userChild uc
-            LEFT JOIN FETCH cr.recordTags rt
+            LEFT JOIN FETCH cr.childRecordTags rt
             LEFT JOIN FETCH rt.developmentType d
-            LEFT JOIN FETCH cr.images i
+            LEFT JOIN FETCH cr.childRecordImages i
             WHERE cr.userChild.user.id = :userId AND cr.userChild.id = :childId
             """)
     List<ChildRecord> findRecordsByUserIdAndChildId(@Param("userId") final Long userId, @Param("childId") final Long childId);
@@ -25,8 +25,8 @@ public interface RecordRepository extends JpaRepository<ChildRecord, Long> {
             SELECT cr
             FROM ChildRecord cr
             LEFT JOIN FETCH cr.userChild uc
-            LEFT JOIN FETCH cr.recordTags rt
-            LEFT JOIN FETCH cr.images i
+            LEFT JOIN FETCH cr.childRecordTags rt
+            LEFT JOIN FETCH cr.childRecordImages i
             WHERE cr.userChild.id = :childId AND cr.id = :recordId
             """)
     Optional<ChildRecord> findByChildIdAndRecordId(@Param("childId") final Long childId, @Param("recordId") final Long recordId);

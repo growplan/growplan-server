@@ -1,12 +1,11 @@
 package com.growplan.survey.domain;
 
-import com.growplan.center.domain.CenterTag;
+import com.growplan.center.domain.CenterDevTag;
 import com.growplan.record.domain.ChildRecordTag;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -31,5 +30,5 @@ public class DevelopmentType {
     private List<SurveyGroup> surveyGroups;
 
     @OneToMany(mappedBy = "developmentType")
-    private List<CenterTag> centerTags;
+    private List<CenterDevTag> centerDevTags;
 }

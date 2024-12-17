@@ -31,11 +31,11 @@ public class RecordResponse {
     private final List<String> imageUrls;
 
     public static final RecordResponse of(final ChildRecord record) {
-        final List<String> developmentTypes = record.getRecordTags().stream()
+        final List<String> developmentTypes = record.getChildRecordTags().stream()
                 .map(recordTag -> recordTag.getDevelopmentType().getType())
                 .toList();
 
-        final List<String> imageUrls = record.getImages().stream()
+        final List<String> imageUrls = record.getChildRecordImages().stream()
                 .map(image -> image.getImageUrl())
                 .toList();
 
