@@ -35,7 +35,7 @@ public class ChildRecord extends BaseEntity {
     private boolean isLiked;
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<ChildRecordTag> recordTags = new HashSet<>();
+    private Set<ChildRecordTag> childRecordTags = new HashSet<>();
 
     @OneToMany(mappedBy = "childRecord", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<ChildRecordImage> childRecordImages = new HashSet<>();

@@ -31,7 +31,7 @@ public class RecordResponse {
     private final List<String> imageUrls;
 
     public static final RecordResponse of(final ChildRecord record) {
-        final List<String> developmentTypes = record.getRecordTags().stream()
+        final List<String> developmentTypes = record.getChildRecordTags().stream()
                 .map(recordTag -> recordTag.getDevelopmentType().getType())
                 .toList();
 
