@@ -2,6 +2,7 @@ package com.growplan.center.dto.response;
 
 import com.growplan.center.domain.Center;
 import com.growplan.center.domain.type.CenterTagType;
+import com.growplan.image.domain.Image;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,9 @@ public class CenterResponse {
     @Schema(description = "센터 태그 리스트", example = "[\"언어\", \"운동\"]")
     private final List<String> tags;
 
+    @Schema(description = "이미지 URL 리스트", example = "[\"https://example.com/image1.jpg\", \"https://example.com/image2.jpg\"]")
+    private final List<String> images;
+
     @Schema(description = "스크랩 여부", example = "false")
     private final Boolean isScraped;
 
@@ -33,11 +37,16 @@ public class CenterResponse {
                 .map(centerTag -> CenterTagType.valueOf(centerTag.getDevelopmentType().getType()).getName())
                 .collect(Collectors.toList());
 
+        final List<String> images = center.getCenterImages().stream()
+                .map(Image::getImageUrl)
+                .collect(Collectors.toList());
+
         return new CenterResponse(
                 center.getId(),
                 center.getName(),
                 center.getLocation(),
                 tags,
+                images,
                 isScraped
         );
     }

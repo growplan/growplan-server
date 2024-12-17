@@ -60,8 +60,8 @@ public class RecordService {
         }
 
         return records.stream()
-                .filter(record -> record.getRecordTags() != null &&
-                        record.getRecordTags().stream()
+                .filter(record -> record.getChildRecordTags() != null &&
+                        record.getChildRecordTags().stream()
                                 .anyMatch(tag -> tag.getDevelopmentType().getType().equals(developmentType)))
                 .collect(Collectors.toList());
     }
