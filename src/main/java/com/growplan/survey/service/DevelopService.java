@@ -42,7 +42,8 @@ public class DevelopService {
 
         final Integer childMonths = calculateAgeInMonths(userChild.getBirthdate());
 
-        final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId());
+        final LocalDate currentDate = LocalDate.now();
+        final List<SurveyResult> surveyResults = surveyResultRepository.findRecentSurveyResults(userChild.getId(), currentDate);
 
         final List<SurveyGroup> surveyGroups = surveyGroupRepository.findSurveyGroupByMonths(childMonths);
         final List<SurveyTitle> surveyTitles = getRandomSurveyTitles(surveyGroups);
