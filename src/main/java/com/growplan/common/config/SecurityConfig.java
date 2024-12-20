@@ -47,7 +47,7 @@ public class SecurityConfig {
         final CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://growplan.netlify.app"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:5173", "https://growplan.netlify.app", "https://growplan.site"));
         config.setAllowedHeaders(List.of(
                 "Origin",
                 "Accept",
