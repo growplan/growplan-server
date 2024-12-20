@@ -12,12 +12,11 @@ import java.util.Optional;
 public interface SurveyResultRepository extends JpaRepository<SurveyResult, Long> {
 
     @Query("""
-            SELECT sr FROM SurveyResult sr
-            WHERE sr.createdAt = (
-                SELECT MAX(s.createdAt) FROM SurveyResult s
-            ) AND sr.userChild.id = :childId
+            SELECT sr 
+            FROM SurveyResult sr
+            WHERE sr.userChild.id = :childId AND DATE(sr.updatedAt) = :currentDate 
             """)
-    List<SurveyResult> findRecentSurveyResults(@Param("childId") final Long childId);
+    List<SurveyResult> findRecentSurveyResults(@Param("childId") final Long childId, @Param("currentDate") final LocalDate currentDate);
 
     @Query("""
             SELECT sr FROM SurveyResult sr
