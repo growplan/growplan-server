@@ -86,6 +86,19 @@ public class SurveyService {
                 .collect(Collectors.toList());
     }
 
+    public void createOrUpdateChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
+        final List<ChildSurvey> existingChildSurveys = childSurveyRepository.findBySurveyIds(surveyMap.keySet().stream().toList(), LocalDate.now());
+        List<ChildSurvey> childSurveys;
+
+
+        if (existingChildSurveys.isEmpty()) {
+            childSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
+        } else {
+            childSurveys = updateChildSurveys(childSurveyRequests, existingChildSurveys, surveyMap);
+        }
+        childSurveyRepository.saveAll(childSurveys);
+    }
+
     private List<ChildSurvey> createChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
         return childSurveyRequests.stream()
                 .map(childSurveyRequest -> new ChildSurvey(
@@ -96,26 +109,18 @@ public class SurveyService {
                 .collect(Collectors.toList());
     }
 
-    public void createOrUpdateChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
-        final List<ChildSurvey> childSurveys = childSurveyRepository.findBySurveyIds(surveyMap.keySet().stream().toList(), LocalDate.now());
-
-        if (childSurveys.isEmpty()) {
-            final List<ChildSurvey> createdChildSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
-            childSurveyRepository.saveAll(createdChildSurveys);
-            return;
-        }
-
+    private List<ChildSurvey> updateChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final List<ChildSurvey> existingChildSurveys, final Map<Long, Survey> surveyMap) {
         final Map<Long, ChildSurveyRequest> requestMap = childSurveyRequests.stream()
                 .collect(Collectors.toMap(ChildSurveyRequest::getId, request -> request));
 
-        childSurveys.forEach(childSurvey -> {
+        existingChildSurveys.forEach(childSurvey -> {
             final ChildSurveyRequest matchingRequest = requestMap.get(childSurvey.getSurvey().getId());
-            if (matchingRequest != null && matchingRequest.getId().equals(childSurvey.getSurvey().getId())) {
+            if (matchingRequest != null) {
                 childSurvey.updateChildSurvey(matchingRequest.getStatus());
             }
         });
 
-        childSurveyRepository.saveAll(childSurveys);
+        return existingChildSurveys;
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
