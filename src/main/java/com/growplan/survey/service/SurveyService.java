@@ -76,9 +76,7 @@ public class SurveyService {
         final Map<Long, Survey> surveyMap = surveys.stream()
                 .collect(Collectors.toMap(Survey::getId, survey -> survey));
 
-        final List<ChildSurvey> childSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
-
-        childSurveyRepository.saveAll(childSurveys);
+        createOrUpdateChildSurveys(childSurveyRequests, userChild, surveyMap);
     }
 
     private List<Long> getSurveyIds(final List<ChildSurveyRequest> childSurveyRequests) {
@@ -96,6 +94,28 @@ public class SurveyService {
                         surveyMap.get(childSurveyRequest.getId())
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public void createOrUpdateChildSurveys(final List<ChildSurveyRequest> childSurveyRequests, final UserChild userChild, final Map<Long, Survey> surveyMap) {
+        final List<ChildSurvey> childSurveys = childSurveyRepository.findBySurveyIds(surveyMap.keySet().stream().toList(), LocalDate.now());
+
+        if (childSurveys.isEmpty()) {
+            final List<ChildSurvey> createdChildSurveys = createChildSurveys(childSurveyRequests, userChild, surveyMap);
+            childSurveyRepository.saveAll(createdChildSurveys);
+            return;
+        }
+
+        final Map<Long, ChildSurveyRequest> requestMap = childSurveyRequests.stream()
+                .collect(Collectors.toMap(ChildSurveyRequest::getId, request -> request));
+
+        childSurveys.forEach(childSurvey -> {
+            final ChildSurveyRequest matchingRequest = requestMap.get(childSurvey.getSurvey().getId());
+            if (matchingRequest != null && matchingRequest.getId().equals(childSurvey.getSurvey().getId())) {
+                childSurvey.updateChildSurvey(matchingRequest.getStatus());
+            }
+        });
+
+        childSurveyRepository.saveAll(childSurveys);
     }
 
     public void updateChildSurvey(final Long userId, final Long childId, final Long surveyId, final ChildSurveyUpdateRequest childSurveyUpdateRequest) {
