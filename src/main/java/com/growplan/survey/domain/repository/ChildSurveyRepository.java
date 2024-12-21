@@ -31,4 +31,14 @@ public interface ChildSurveyRepository extends JpaRepository<ChildSurvey, Long> 
             @Param("developmentType") final String developmentType,
             @Param("childId") final Long childId
     );
+
+    @Query("""
+            SELECT cs 
+            FROM ChildSurvey cs
+            LEFT JOIN FETCH cs.survey s
+            LEFT JOIN FETCH s.surveyGroup sg
+            LEFT JOIN FETCH sg.developmentType t
+            WHERE DATE(cs.updatedAt) = :currentDate AND s.id IN :surveyIds
+            """)
+    List<ChildSurvey> findBySurveyIds(@Param("surveyIds") final List<Long> surveyIds, @Param("currentDate") final LocalDate date);
 }
