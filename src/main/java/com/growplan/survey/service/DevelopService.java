@@ -87,7 +87,7 @@ public class DevelopService {
 
         updateSurveyScore(surveyResult, developmentScore, isRisk);
 
-        return DevelopmentResultResponse.of(currentDate, surveys, developmentScore, feedbacks);
+        return DevelopmentResultResponse.of(currentDate, surveys, developmentScore, isRisk, feedbacks);
     }
 
     private List<ChildSurvey> getChildSurveys(final UserChild userChild, final LocalDate date, final String developmentType) {
