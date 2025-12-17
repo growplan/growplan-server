@@ -79,7 +79,7 @@ GrowPlan은 아동 발달 상태를 체크리스트 기반으로 측정하고, �
 
 ### 🗄️ 데이터베이스 설계
 
-<img width="966" height="693" alt="1000014796" src="https://github.com/user-attachments/assets/d47d5009-cac1-4062-a6c0-0e23869be88c" />
+<img width="3189" height="1998" alt="growplan" src="https://github.com/user-attachments/assets/32b29428-5dbe-4128-a9e2-1b412c5cd0fe" />
 
 ### 🔑 주요 코드
 
@@ -174,7 +174,7 @@ private List<String> getCenterTagNames(List<String> centerTags) {
 }
 ```
 
-#### 4. 발달 설문 및 결과 조회
+#### 5. 발달 설문 및 결과 조회
 
 ```java
 // java/com/growplan/survey/service/DevelopService.java
